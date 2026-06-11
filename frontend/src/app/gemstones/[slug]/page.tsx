@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 const GEMSTONES: Record<string, {
   name: string; sanskrit: string; planet: string; color: string;
@@ -126,58 +130,46 @@ export default async function GemstoneDetailPage({ params }: Props) {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 80 }}>
+      <main className="pt-20">
         {/* Hero */}
-        <section style={{ padding: "64px 24px", position: "relative" }}>
+        <section className="px-6 py-16 relative overflow-hidden">
           <div className="hero-gradient" />
-          <div className="dot-grid absolute inset-0" style={{ opacity: 0.3 }} />
-          <div className="relative max-w-4xl mx-auto" style={{ zIndex: 1 }}>
+          <div className="dot-grid absolute inset-0 opacity-30" />
+          <div className="relative max-w-4xl mx-auto z-10">
             <Link
               href="/gemstones"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: 13,
-                color: "#94a3b8",
-                textDecoration: "none",
-                marginBottom: 32,
-              }}
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-purple-300 mb-8 transition-colors duration-200"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
               Back to Gemstones
             </Link>
 
-            <div className="flex items-center gap-6 flex-wrap">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <div
+                className="w-20 h-20 rounded-2xl shrink-0 flex items-center justify-center shadow-lg"
                 style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 18,
-                  background: `radial-gradient(circle at 35% 35%, ${gem.color}cc, ${gem.color}55)`,
-                  boxShadow: `0 0 40px ${gem.color}60, inset 0 2px 0 rgba(255,255,255,0.25)`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
+                  background: `radial-gradient(circle at 35% 35%, ${gem.color}cc, ${gem.color}44)`,
+                  boxShadow: `0 0 35px ${gem.color}45, inset 0 2px 0 rgba(255,255,255,0.2)`,
                 }}
               >
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
                   <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.9" />
                   <path d="M3 9h18" stroke="white" strokeWidth="0.5" opacity="0.4" />
                 </svg>
               </div>
               <div>
-                <span className="planet-badge" style={{ marginBottom: 10, display: "inline-block" }}>{gem.planet}</span>
-                <h1 className="display-xl" style={{ color: "#f8f8ff", margin: "8px 0 0" }}>
+                <span className="text-[10px] font-medium uppercase tracking-widest px-2.5 py-1 rounded bg-[#a855f7]/10 text-purple-300 border border-[#a855f7]/20 mb-3 inline-block">
+                  {gem.planet}
+                </span>
+                <h1 className="display-xl text-[#f8f8ff] m-0 font-light flex items-baseline flex-wrap gap-x-4">
                   {gem.name}
-                  <span style={{ fontSize: "0.45em", color: "#94a3b8", marginLeft: 16, fontStyle: "italic", letterSpacing: 0 }}>
-                    {gem.sanskrit}
+                  <span className="text-xl md:text-2xl text-slate-400 font-light italic">
+                    ({gem.sanskrit})
                   </span>
                 </h1>
-                <p style={{ fontSize: 16, color: "#94a3b8", marginTop: 8, fontStyle: "italic" }}>
+                <p className="text-base text-slate-400 mt-2 font-light italic">
                   "{gem.tagline}"
                 </p>
               </div>
@@ -185,130 +177,134 @@ export default async function GemstoneDetailPage({ params }: Props) {
           </div>
         </section>
 
-        <hr className="section-divider" />
+        <div className="max-w-4xl mx-auto px-6">
+          <Separator className="bg-purple-500/10" />
+        </div>
 
         {/* Content */}
-        <section style={{ padding: "64px 24px 96px" }}>
+        <section className="px-6 py-16 pb-24">
           <div className="max-w-4xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main content */}
-              <div style={{ gridColumn: "1 / 3" }}>
+              <div className="lg:col-span-2 flex flex-col gap-6">
                 {/* Description */}
-                <div className="glass-card" style={{ padding: "32px", marginBottom: 24 }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 300, color: "#f8f8ff", marginBottom: 16, letterSpacing: "-0.2px" }}>
-                    About {gem.name}
-                  </h2>
-                  <p style={{ fontSize: 15, color: "#94a3b8", lineHeight: 1.8, margin: 0 }}>
-                    {gem.description}
-                  </p>
-                </div>
+                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
+                  <CardContent className="p-8">
+                    <h2 className="text-lg font-light text-[#f8f8ff] mb-4 tracking-tight">
+                      About {gem.name}
+                    </h2>
+                    <p className="text-sm md:text-base text-slate-400 font-light leading-relaxed">
+                      {gem.description}
+                    </p>
+                  </CardContent>
+                </Card>
 
                 {/* How to Wear */}
-                <div className="glass-card" style={{ padding: "32px", marginBottom: 24 }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 300, color: "#f8f8ff", marginBottom: 16, letterSpacing: "-0.2px" }}>
-                    How to Wear
-                  </h2>
-                  <p style={{ fontSize: 15, color: "#94a3b8", lineHeight: 1.8, margin: 0 }}>
-                    {gem.howToWear}
-                  </p>
-                </div>
+                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
+                  <CardContent className="p-8">
+                    <h2 className="text-lg font-light text-[#f8f8ff] mb-4 tracking-tight">
+                      How to Wear
+                    </h2>
+                    <p className="text-sm md:text-base text-slate-400 font-light leading-relaxed">
+                      {gem.howToWear}
+                    </p>
+                  </CardContent>
+                </Card>
 
                 {/* Caution */}
-                <div
-                  style={{
-                    background: "rgba(251,191,36,0.06)",
-                    border: "1px solid rgba(251,191,36,0.2)",
-                    borderRadius: 16,
-                    padding: "28px 32px",
-                  }}
-                >
-                  <h2 style={{ fontSize: 16, fontWeight: 400, color: "#fbbf24", marginBottom: 12 }}>
-                    ⚠️ Caution
-                  </h2>
-                  <p style={{ fontSize: 14, color: "#e2e8f0", lineHeight: 1.8, margin: 0 }}>
-                    {gem.caution}
-                  </p>
-                </div>
+                <Card className="border-amber-500/20 bg-amber-500/5 backdrop-blur-sm">
+                  <CardContent className="p-8">
+                    <h2 className="text-base font-normal text-amber-400 mb-3 flex items-center gap-2">
+                      ⚠️ Caution
+                    </h2>
+                    <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">
+                      {gem.caution}
+                    </p>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Sidebar */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div className="flex flex-col gap-6">
                 {/* Quick facts */}
-                <div className="glass-card" style={{ padding: "24px" }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 400, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 16 }}>
-                    Quick Facts
-                  </h3>
-                  {[
-                    { label: "Ruling Planet", value: gem.planet },
-                    { label: "Recommended Weight", value: gem.weight },
-                    { label: "Metal", value: gem.metal },
-                    { label: "Finger", value: gem.finger },
-                    { label: "Best Day", value: gem.day },
-                  ].map((item) => (
-                    <div key={item.label} style={{ borderBottom: "1px solid rgba(139,92,246,0.1)", paddingBottom: 12, marginBottom: 12 }}>
-                      <p style={{ fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>{item.label}</p>
-                      <p style={{ fontSize: 14, color: "#f8f8ff", margin: 0 }}>{item.value}</p>
+                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
+                  <CardContent className="p-6">
+                    <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-5">
+                      Quick Facts
+                    </h3>
+                    <div className="flex flex-col gap-4">
+                      {[
+                        { label: "Ruling Planet", value: gem.planet },
+                        { label: "Recommended Weight", value: gem.weight },
+                        { label: "Metal", value: gem.metal },
+                        { label: "Finger", value: gem.finger },
+                        { label: "Best Day", value: gem.day },
+                      ].map((item) => (
+                        <div key={item.label} className="border-b border-purple-500/10 pb-3 last:border-0 last:pb-0">
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{item.label}</p>
+                          <p className="text-sm text-[#f8f8ff] font-light">{item.value}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </CardContent>
+                </Card>
 
                 {/* Compatible signs */}
-                <div className="glass-card" style={{ padding: "24px" }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 400, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 16 }}>
-                    Compatible Rashi
-                  </h3>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {gem.rashi.map((r) => (
-                      <span
-                        key={r}
-                        style={{
-                          fontSize: 13,
-                          padding: "5px 12px",
-                          background: `${gem.color}15`,
-                          border: `1px solid ${gem.color}30`,
-                          borderRadius: 9999,
-                          color: "#cbd5e1",
-                        }}
-                      >
-                        {r}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
+                  <CardContent className="p-6">
+                    <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-4">
+                      Compatible Rashi
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {gem.rashi.map((r) => (
+                        <span
+                          key={r}
+                          className="text-xs px-3 py-1 rounded-full text-slate-300 border border-slate-700/50"
+                          style={{
+                            background: `${gem.color}08`,
+                            borderColor: `${gem.color}20`,
+                          }}
+                        >
+                          {r}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
 
                 {/* Properties */}
-                <div className="glass-card" style={{ padding: "24px" }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 400, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 16 }}>
-                    Key Properties
-                  </h3>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {gem.properties.map((p) => (
-                      <span
-                        key={p}
-                        style={{
-                          fontSize: 12,
-                          padding: "4px 10px",
-                          background: "rgba(124,58,237,0.1)",
-                          border: "1px solid rgba(139,92,246,0.2)",
-                          borderRadius: 9999,
-                          color: "#c084fc",
-                        }}
-                      >
-                        {p}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
+                  <CardContent className="p-6">
+                    <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-4">
+                      Key Properties
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {gem.properties.map((p) => (
+                        <span
+                          key={p}
+                          className="text-xs px-2.5 py-0.5 rounded-full text-purple-300 bg-purple-500/10 border border-purple-500/20"
+                        >
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
 
                 {/* CTA */}
-                <div className="glass-card" style={{ padding: "24px", background: "rgba(124,58,237,0.06)", borderColor: "rgba(168,85,247,0.3)" }}>
-                  <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 14 }}>
-                    Wondering if {gem.name} is right for your chart?
-                  </p>
-                  <Link href="/#recommend" className="btn-primary" style={{ width: "100%", justifyContent: "center", fontSize: 14 }}>
-                    Get My Reading
-                  </Link>
-                </div>
+                <Card className="border-purple-500/30 bg-purple-500/5 backdrop-blur-md shadow-[0_0_15px_rgba(124,58,237,0.05)]">
+                  <CardContent className="p-6">
+                    <p className="text-xs md:text-sm text-slate-400 font-light leading-relaxed mb-4">
+                      Wondering if {gem.name} is right for your chart?
+                    </p>
+                    <Button
+                      render={<Link href="/#recommend" />}
+                      className="w-full justify-center bg-gradient-to-r from-[#7c3aed] to-[#a855f7] hover:from-[#6d28d9] hover:to-[#9333ea] text-white border-0 py-2.5 text-xs md:text-sm font-medium rounded-full shadow-[0_0_15px_rgba(124,58,237,0)] hover:shadow-[0_0_20px_rgba(124,58,237,0.3)] transition-all"
+                    >
+                      Get My Reading
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>

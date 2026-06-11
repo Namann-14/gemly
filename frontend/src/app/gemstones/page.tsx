@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Gemstone Encyclopedia",
@@ -142,34 +146,23 @@ export default function GemstonesPage() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 80 }}>
+      <main className="pt-20">
         {/* Hero */}
-        <section style={{ padding: "80px 24px 48px", textAlign: "center", position: "relative" }}>
+        <section className="px-6 py-20 text-center relative overflow-hidden">
           <div className="hero-gradient" />
-          <div className="dot-grid absolute inset-0" style={{ opacity: 0.3 }} />
-          <div className="relative max-w-3xl mx-auto" style={{ zIndex: 1 }}>
-            <span
-              style={{
-                display: "inline-block",
-                fontSize: 11,
-                fontWeight: 400,
-                color: "#a855f7",
-                background: "rgba(168,85,247,0.1)",
-                border: "1px solid rgba(168,85,247,0.25)",
-                borderRadius: 9999,
-                padding: "5px 14px",
-                marginBottom: 24,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
+          <div className="dot-grid absolute inset-0 opacity-30" />
+          <div className="relative max-w-3xl mx-auto z-10">
+            <Badge
+              variant="outline"
+              className="mb-6 px-3.5 py-1.5 rounded-full border-purple-500/30 bg-purple-500/10 text-purple-300 text-[11px] font-normal tracking-wider uppercase"
             >
               Ratna Shastra Encyclopedia
-            </span>
-            <h1 className="display-xl" style={{ color: "#f8f8ff", marginBottom: 16 }}>
+            </Badge>
+            <h1 className="display-xl text-[#f8f8ff] mb-6 font-light">
               The Nine Sacred
-              <span className="gradient-text"> Navaratna</span>
+              <span className="gradient-text font-medium"> Navaratna</span>
             </h1>
-            <p style={{ fontSize: 16, color: "#94a3b8" }}>
+            <p className="text-base md:text-lg text-slate-400 font-light leading-relaxed">
               The classical Vedic gemstones corresponding to the nine planets.
               Each one a channel for specific cosmic energies.
             </p>
@@ -177,96 +170,89 @@ export default function GemstonesPage() {
         </section>
 
         {/* Grid */}
-        <section style={{ padding: "40px 24px 96px" }}>
+        <section className="px-6 py-10 pb-24">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {GEMSTONES.map((gem) => (
                 <Link
                   key={gem.slug}
                   href={`/gemstones/${gem.slug}`}
-                  style={{ textDecoration: "none" }}
+                  className="no-underline group h-full block"
                 >
-                  <div
-                    className="gemstone-card relative overflow-hidden h-full"
+                  <Card
+                    className="relative overflow-hidden h-full border-purple-500/10 hover:border-purple-500/30 bg-purple-950/5 hover:bg-purple-950/10 transition-all duration-300 flex flex-col justify-between"
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: `1px solid ${gem.color}35`,
-                      borderRadius: 16,
-                      padding: "28px",
-                      cursor: "pointer",
-                      boxShadow: `0 0 40px ${gem.color}12`,
-                      transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
+                      boxShadow: `0 0 30px ${gem.color}08`,
                     }}
                   >
-                    <div className="shimmer-overlay" />
-
-                    {/* Planet badge */}
-                    <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-                      <span className="planet-badge">{gem.planet}</span>
-                    </div>
-
-                    {/* Gem icon + name */}
-                    <div className="flex items-center gap-4 mb-4">
-                      <div
-                        style={{
-                          width: 52,
-                          height: 52,
-                          borderRadius: 12,
-                          background: `radial-gradient(circle at 35% 35%, ${gem.color}cc, ${gem.color}55)`,
-                          boxShadow: `0 0 20px ${gem.color}50, inset 0 1px 0 rgba(255,255,255,0.25)`,
-                          flexShrink: 0,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.85" />
-                          <path d="M3 9h18" stroke="white" strokeWidth="0.5" opacity="0.4" />
-                        </svg>
-                      </div>
+                    <CardContent className="p-8 flex flex-col h-full justify-between">
                       <div>
-                        <h2 style={{ fontSize: 20, fontWeight: 300, color: "#f8f8ff", margin: 0, letterSpacing: "-0.2px" }}>
-                          {gem.name}
-                        </h2>
-                        <p style={{ fontSize: 13, color: "#94a3b8", margin: "3px 0 0" }}>{gem.sanskrit}</p>
+                        {/* Planet badge */}
+                        <div className="flex justify-between items-start mb-6">
+                          <span
+                            className="text-[10px] font-medium uppercase tracking-widest px-2.5 py-1 rounded bg-[#a855f7]/10 text-purple-300 border border-[#a855f7]/20"
+                          >
+                            {gem.planet}
+                          </span>
+                        </div>
+
+                        {/* Gem icon + name */}
+                        <div className="flex items-center gap-4 mb-4">
+                          <div
+                            className="w-12 h-12 rounded-xl shrink-0 flex items-center justify-center shadow-inner"
+                            style={{
+                              background: `radial-gradient(circle at 35% 35%, ${gem.color}cc, ${gem.color}44)`,
+                              boxShadow: `0 0 15px ${gem.color}35`,
+                            }}
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                              <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.85" />
+                              <path d="M3 9h18" stroke="white" strokeWidth="0.5" opacity="0.4" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h2 className="text-lg font-light text-[#f8f8ff] m-0 tracking-tight leading-none group-hover:text-purple-300 transition-colors">
+                              {gem.name}
+                            </h2>
+                            <p className="text-xs text-slate-400 mt-1">{gem.sanskrit}</p>
+                          </div>
+                        </div>
+
+                        <p className="text-xs md:text-sm text-slate-400 leading-relaxed font-light italic mb-6">
+                          "{gem.tagline}"
+                        </p>
                       </div>
-                    </div>
 
-                    <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.6, fontStyle: "italic", marginBottom: 16 }}>
-                      "{gem.tagline}"
-                    </p>
+                      <div>
+                        {/* Properties */}
+                        <div className="flex flex-wrap gap-1.5 mb-6">
+                          {gem.properties.map((p) => (
+                            <span
+                              key={p}
+                              className="text-[10px] px-2 py-0.5 rounded-full text-slate-300 border border-slate-700/50"
+                              style={{
+                                background: `${gem.color}08`,
+                                borderColor: `${gem.color}20`,
+                              }}
+                            >
+                              {p}
+                            </span>
+                          ))}
+                        </div>
 
-                    {/* Properties */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: "auto" }}>
-                      {gem.properties.map((p) => (
-                        <span
-                          key={p}
-                          style={{
-                            fontSize: 11,
-                            padding: "3px 10px",
-                            background: `${gem.color}15`,
-                            border: `1px solid ${gem.color}30`,
-                            borderRadius: 9999,
-                            color: "#cbd5e1",
-                          }}
+                        {/* View detail arrow */}
+                        <div
+                          className="flex items-center gap-1 text-xs font-normal transition-colors group-hover:opacity-100 opacity-80"
+                          style={{ color: gem.color }}
                         >
-                          {p}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* View detail arrow */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 16, fontSize: 13, color: gem.color }}>
-                      View full details
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M9 18l6-6-6-6" />
-                      </svg>
-                    </div>
-                  </div>
+                          View full details
+                          <svg className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M9 18l6-6-6-6" />
+                          </svg>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </Link>
               ))}
             </div>
@@ -274,19 +260,25 @@ export default function GemstonesPage() {
         </section>
 
         {/* CTA */}
-        <section style={{ padding: "0 24px 96px", textAlign: "center" }}>
+        <section className="px-6 pb-24 text-center">
           <div className="max-w-xl mx-auto">
-            <div className="glass-card" style={{ padding: "40px" }}>
-              <h2 className="display-lg" style={{ color: "#f8f8ff", marginBottom: 12 }}>
-                Which one is yours?
-              </h2>
-              <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 28 }}>
-                Don't guess — let your birth chart and AI determine your perfect gemstone.
-              </p>
-              <Link href="/#recommend" className="btn-primary" style={{ fontSize: 15, padding: "13px 32px" }}>
-                Get My Personalized Reading
-              </Link>
-            </div>
+            <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
+              <CardContent className="p-10">
+                <h2 className="display-lg text-[#f8f8ff] mb-3 font-light">
+                  Which one is yours?
+                </h2>
+                <p className="text-sm md:text-base text-slate-400 font-light mb-8">
+                  Don't guess — let your birth chart and AI determine your perfect gemstone.
+                </p>
+                <Button
+                  render={<Link href="/#recommend" />}
+                  size="lg"
+                  className="rounded-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] hover:from-[#6d28d9] hover:to-[#9333ea] text-white border-0 px-8 py-6 text-sm md:text-base shadow-[0_0_30px_rgba(124,58,237,0)] hover:shadow-[0_0_35px_rgba(124,58,237,0.4)] transition-all duration-300"
+                >
+                  Get My Personalized Reading
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </section>
       </main>

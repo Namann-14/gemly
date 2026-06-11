@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
-// ── Types ────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------
 interface GemstoneResult {
   name: string;
   sanskrit: string;
@@ -35,7 +41,7 @@ interface FormData {
   concern: string;
 }
 
-// ── Data ─────────────────────────────────────────────────────────
+// --- Data ---------------------------------------------------------
 const ZODIAC_SIGNS = [
   { value: "Aries (Mesh)",         emoji: "♈" },
   { value: "Taurus (Vrishabha)",   emoji: "♉" },
@@ -63,13 +69,12 @@ const CONCERNS = [
 const GEMSTONE_COLORS: Record<string, string> = {
   Ruby: "#e11d48", Emerald: "#059669", Sapphire: "#2563eb",
   "Blue Sapphire": "#1d4ed8", "Yellow Sapphire": "#d97706",
-  Amethyst: "#7c3aed", Pearl: "#94a3b8", Diamond: "#e2e8f0",
+  Amethyst: "#a855f7", Pearl: "#94a3b8", Diamond: "#e2e8f0",
   Coral: "#ea580c", "Red Coral": "#ea580c",
   "Cat's Eye": "#ca8a04", Hessonite: "#92400e",
   Topaz: "#b45309", Opal: "#06b6d4", Aquamarine: "#0891b2",
 };
 
-// ── Step definitions ─────────────────────────────────────────────
 const STEPS = [
   { id: 1, title: "About You",       subtitle: "Let's start with your name and when you were born." },
   { id: 2, title: "Birth Details",   subtitle: "Where and when exactly were you born?" },
@@ -77,82 +82,96 @@ const STEPS = [
   { id: 4, title: "Your Focus",      subtitle: "What area of life do you want guidance on?" },
 ];
 
-// ── Gemstone Card ────────────────────────────────────────────────
+// --- Gemstone Card ------------------------------------------------
 function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
   const [expanded, setExpanded] = useState(false);
-  const color = GEMSTONE_COLORS[gem.name] ?? "#7c3aed";
+  const color = GEMSTONE_COLORS[gem.name] ?? "#a855f7";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.15, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-      className="gemstone-card relative overflow-hidden"
+      transition={{ delay: index * 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="gemstone-card relative overflow-hidden p-8 rounded-2xl border bg-white/[0.015] hover:bg-white/[0.03] transition-all duration-300"
       style={{
-        background: "rgba(255,255,255,0.04)",
-        border: `1px solid ${color}40`,
-        borderRadius: 16,
-        padding: "28px",
-        boxShadow: `0 0 40px ${color}18`,
-        transition: "box-shadow 0.35s ease, border-color 0.35s ease",
+        borderColor: `${color}25`,
+        boxShadow: `0 10px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px ${color}08`,
       }}
     >
       <div className="shimmer-overlay" />
 
       {/* Header row */}
-      <div className="flex items-start justify-between mb-5">
-        <span style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-[10px] text-slate-400 uppercase tracking-widest font-medium">
           #{index + 1} Recommended
         </span>
-        <span className="planet-badge">{gem.planet}</span>
+        <Badge
+          variant="outline"
+          className="bg-purple-500/10 border-purple-500/20 text-purple-300 text-[10px] tracking-wider px-2.5 py-0.5 rounded-full"
+        >
+          {gem.planet}
+        </Badge>
       </div>
 
       {/* Gem + name */}
       <div className="flex items-center gap-4 mb-4">
-        <div style={{
-          width: 56, height: 56, borderRadius: 12, flexShrink: 0,
-          background: `radial-gradient(circle at 35% 35%, ${color}cc, ${color}66)`,
-          boxShadow: `0 0 24px ${color}60, inset 0 1px 0 rgba(255,255,255,0.3)`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <div
+          className="w-12 h-12 rounded-xl shrink-0 flex items-center justify-center shadow-md"
+          style={{
+            background: `radial-gradient(circle at 35% 35%, ${color}cc, ${color}44)`,
+            boxShadow: `0 0 15px ${color}35`,
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.85" />
             <path d="M3 9h18" stroke="white" strokeWidth="0.5" opacity="0.4" />
           </svg>
         </div>
         <div>
-          <h3 className="display-md" style={{ color: "#f8f8ff", margin: 0 }}>{gem.name}</h3>
-          <p style={{ fontSize: 13, color: "#94a3b8", margin: "3px 0 0" }}>{gem.sanskrit}</p>
+          <h3 className="text-xl font-light text-[#f8f8ff] tracking-tight">{gem.name}</h3>
+          <p className="text-xs text-slate-400 italic mt-0.5">{gem.sanskrit}</p>
         </div>
       </div>
 
       {/* Tagline */}
-      <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.5, fontStyle: "italic", marginBottom: 16 }}>
-        "{gem.tagline}"
+      <p className="text-xs md:text-sm text-slate-400 font-light italic leading-relaxed mb-6">
+        &ldquo;{gem.tagline}&rdquo;
       </p>
 
       {/* Why box */}
-      <div style={{
-        background: `${color}12`, border: `1px solid ${color}25`,
-        borderRadius: 10, padding: "14px 16px", marginBottom: 16,
-      }}>
-        <p style={{ fontSize: 12, fontWeight: 400, color: "#c084fc", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+      <div
+        className="rounded-xl p-5 mb-5 border"
+        style={{
+          background: `${color}06`,
+          borderColor: `${color}18`,
+        }}
+      >
+        <p className="text-[10px] font-medium text-purple-400 uppercase tracking-widest mb-2">
           Why this gemstone
         </p>
-        <p style={{ fontSize: 14, color: "#cbd5e1", margin: 0, lineHeight: 1.6 }}>{gem.why_recommended}</p>
+        <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">{gem.why_recommended}</p>
       </div>
 
       {/* Expand toggle */}
-      <button
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => setExpanded(!expanded)}
-        style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}
+        className="p-0 h-auto font-normal hover:bg-transparent flex items-center gap-1 hover:text-[#f8f8ff] transition-colors"
+        style={{ color }}
       >
         {expanded ? "Show less" : "View full details"}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-          style={{ transform: expanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+        <svg
+          className="w-3.5 h-3.5 transition-transform duration-250"
+          style={{ transform: expanded ? "rotate(180deg)" : "none" }}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+        >
           <path d="M6 9l6 6 6-6" />
         </svg>
-      </button>
+      </Button>
 
       <AnimatePresence>
         {expanded && (
@@ -160,29 +179,36 @@ function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ overflow: "hidden" }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            className="overflow-hidden"
           >
-            <div style={{ paddingTop: 16, display: "flex", flexDirection: "column", gap: 14 }}>
+            <div className="pt-6 flex flex-col gap-5 border-t border-purple-500/10 mt-5">
               <div>
-                <p style={{ fontSize: 12, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>Properties</p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-medium mb-2.5">Properties</p>
+                <div className="flex flex-wrap gap-1.5">
                   {gem.properties.map((p) => (
-                    <span key={p} style={{ fontSize: 12, padding: "4px 10px", background: `${color}15`, border: `1px solid ${color}30`, borderRadius: 9999, color: "#cbd5e1" }}>{p}</span>
+                    <Badge
+                      key={p}
+                      variant="outline"
+                      className="text-xs px-2.5 py-0.5 rounded-full text-slate-350 border-slate-700/50"
+                      style={{ background: `${color}06`, borderColor: `${color}18` }}
+                    >
+                      {p}
+                    </Badge>
                   ))}
                 </div>
               </div>
               <div>
-                <p style={{ fontSize: 12, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>How to Wear</p>
-                <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6, margin: 0 }}>{gem.how_to_wear}</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-medium mb-1">How to Wear</p>
+                <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">{gem.how_to_wear}</p>
               </div>
               <div>
-                <p style={{ fontSize: 12, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>Best Day</p>
-                <p style={{ fontSize: 13, color: "#cbd5e1", margin: 0 }}>{gem.best_day}</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-medium mb-1">Best Day</p>
+                <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">{gem.best_day}</p>
               </div>
-              <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.2)", borderRadius: 8, padding: "12px 14px" }}>
-                <p style={{ fontSize: 12, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>⚠ Caution</p>
-                <p style={{ fontSize: 13, color: "#e2e8f0", margin: 0, lineHeight: 1.5 }}>{gem.caution}</p>
+              <div className="border border-amber-500/20 bg-amber-500/5 rounded-xl p-4 flex flex-col gap-1">
+                <p className="text-[10px] text-amber-400 uppercase tracking-widest font-medium">⚠ Caution</p>
+                <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">{gem.caution}</p>
               </div>
             </div>
           </motion.div>
@@ -192,72 +218,41 @@ function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
   );
 }
 
-// ── Step Progress Bar ────────────────────────────────────────────
-function StepProgress({ current, total }: { current: number; total: number }) {
-  return (
-    <div style={{ marginBottom: 32 }}>
-      <div className="flex items-center justify-between mb-3">
-        <span style={{ fontSize: 13, color: "#94a3b8" }}>Step {current} of {total}</span>
-        <span style={{ fontSize: 13, color: "#a855f7" }}>{STEPS[current - 1].title}</span>
-      </div>
-      <div style={{ height: 3, background: "rgba(139,92,246,0.15)", borderRadius: 9999, overflow: "hidden" }}>
-        <motion.div
-          style={{ height: "100%", background: "linear-gradient(90deg, #7c3aed, #a855f7)", borderRadius: 9999 }}
-          initial={{ width: 0 }}
-          animate={{ width: `${(current / total) * 100}%` }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        />
-      </div>
-      <div className="flex justify-between mt-3">
-        {STEPS.map((s) => (
-          <div key={s.id} className="flex flex-col items-center gap-1">
-            <div style={{
-              width: 28, height: 28, borderRadius: "50%",
-              border: `2px solid ${s.id < current ? "#a855f7" : s.id === current ? "#a855f7" : "rgba(139,92,246,0.25)"}`,
-              background: s.id < current ? "linear-gradient(135deg,#7c3aed,#a855f7)" : s.id === current ? "rgba(168,85,247,0.15)" : "transparent",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "all 0.3s",
-            }}>
-              {s.id < current ? (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-              ) : (
-                <span style={{ fontSize: 11, color: s.id === current ? "#a855f7" : "#475569", fontWeight: 400 }}>{s.id}</span>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── Step 1: Name + DOB ───────────────────────────────────────────
+// --- Step 1: Name + DOB -------------------------------------------
 function Step1({ data, onChange }: { data: FormData; onChange: (k: keyof FormData, v: string) => void }) {
   return (
-    <motion.div key="step1" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-      <h2 className="display-md" style={{ color: "#f8f8ff", marginBottom: 8 }}>{STEPS[0].title}</h2>
-      <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 32 }}>{STEPS[0].subtitle}</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        <div>
-          <label className="gem-label" htmlFor="name">Full Name</label>
-          <input
-            id="name" type="text" className="gem-input"
+    <motion.div
+      key="step1"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.4 }}
+    >
+      <h2 className="display-md text-[#f8f8ff] mb-2">{STEPS[0].title}</h2>
+      <p className="text-xs md:text-sm text-slate-400 font-light mb-8">{STEPS[0].subtitle}</p>
+      <div className="flex flex-col gap-5">
+        <div className="space-y-2">
+          <Label htmlFor="name" className="text-slate-400 text-xs font-normal tracking-wide">Full Name</Label>
+          <Input
+            id="name"
+            type="text"
             placeholder="e.g. Arjun Sharma"
             value={data.name}
             onChange={(e) => onChange("name", e.target.value)}
+            className="bg-white/2 border-purple-500/20 text-[#f8f8ff] placeholder:text-slate-600 focus:border-purple-500/50 focus:bg-purple-950/5 focus:ring-purple-500/5 h-11 text-sm font-light"
           />
         </div>
-        <div>
-          <label className="gem-label" htmlFor="dob">Date of Birth</label>
-          <input
-            id="dob" type="date" className="gem-input"
+        <div className="space-y-2">
+          <Label htmlFor="dob" className="text-slate-400 text-xs font-normal tracking-wide">Date of Birth</Label>
+          <Input
+            id="dob"
+            type="date"
             value={data.dob}
             onChange={(e) => onChange("dob", e.target.value)}
+            className="bg-white/2 border-purple-500/20 text-[#f8f8ff] focus:border-purple-500/50 focus:bg-purple-950/5 h-11 text-sm font-light"
             style={{ colorScheme: "dark" }}
           />
-          <p style={{ fontSize: 12, color: "#475569", marginTop: 6 }}>
+          <p className="text-[11px] text-slate-500 font-light mt-1.5 leading-relaxed">
             Your exact birth date is used to calculate your Vimshottari Dasha cycle.
           </p>
         </div>
@@ -266,34 +261,44 @@ function Step1({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
   );
 }
 
-// ── Step 2: Birth time + place ───────────────────────────────────
+// --- Step 2: Birth time + place -----------------------------------
 function Step2({ data, onChange }: { data: FormData; onChange: (k: keyof FormData, v: string) => void }) {
   return (
-    <motion.div key="step2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-      <h2 className="display-md" style={{ color: "#f8f8ff", marginBottom: 8 }}>{STEPS[1].title}</h2>
-      <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 32 }}>{STEPS[1].subtitle}</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        <div>
-          <label className="gem-label" htmlFor="birthPlace">Birth Place</label>
-          <input
-            id="birthPlace" type="text" className="gem-input"
+    <motion.div
+      key="step2"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.4 }}
+    >
+      <h2 className="display-md text-[#f8f8ff] mb-2">{STEPS[1].title}</h2>
+      <p className="text-xs md:text-sm text-slate-400 font-light mb-8">{STEPS[1].subtitle}</p>
+      <div className="flex flex-col gap-5">
+        <div className="space-y-2">
+          <Label htmlFor="birthPlace" className="text-slate-400 text-xs font-normal tracking-wide">Birth Place</Label>
+          <Input
+            id="birthPlace"
+            type="text"
             placeholder="e.g. Mumbai, Maharashtra, India"
             value={data.birthPlace}
             onChange={(e) => onChange("birthPlace", e.target.value)}
+            className="bg-white/2 border-purple-500/20 text-[#f8f8ff] placeholder:text-slate-600 focus:border-purple-500/50 focus:bg-purple-950/5 h-11 text-sm font-light"
           />
         </div>
-        <div>
-          <label className="gem-label" htmlFor="birthTime">
+        <div className="space-y-2">
+          <Label htmlFor="birthTime" className="text-slate-400 text-xs font-normal tracking-wide">
             Birth Time{" "}
-            <span style={{ color: "#475569", fontSize: 12 }}>(optional but improves accuracy)</span>
-          </label>
-          <input
-            id="birthTime" type="time" className="gem-input"
+            <span className="text-slate-500 text-[11px]">(optional but improves accuracy)</span>
+          </Label>
+          <Input
+            id="birthTime"
+            type="time"
             value={data.birthTime}
             onChange={(e) => onChange("birthTime", e.target.value)}
+            className="bg-white/2 border-purple-500/20 text-[#f8f8ff] focus:border-purple-500/50 focus:bg-purple-950/5 h-11 text-sm font-light"
             style={{ colorScheme: "dark" }}
           />
-          <p style={{ fontSize: 12, color: "#475569", marginTop: 6 }}>
+          <p className="text-[11px] text-slate-500 font-light mt-1.5 leading-relaxed">
             Birth time helps calculate your Lagna (Ascendant) for a more precise reading.
           </p>
         </div>
@@ -302,12 +307,18 @@ function Step2({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
   );
 }
 
-// ── Step 3: Zodiac ───────────────────────────────────────────────
+// --- Step 3: Zodiac -----------------------------------------------
 function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormData, v: string) => void }) {
   return (
-    <motion.div key="step3" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-      <h2 className="display-md" style={{ color: "#f8f8ff", marginBottom: 8 }}>{STEPS[2].title}</h2>
-      <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 24 }}>{STEPS[2].subtitle}</p>
+    <motion.div
+      key="step3"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.4 }}
+    >
+      <h2 className="display-md text-[#f8f8ff] mb-2">{STEPS[2].title}</h2>
+      <p className="text-xs md:text-sm text-slate-400 font-light mb-8">{STEPS[2].subtitle}</p>
       <div className="grid grid-cols-3 gap-3">
         {ZODIAC_SIGNS.map((z) => {
           const selected = data.zodiac === z.value;
@@ -316,22 +327,14 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
               key={z.value}
               type="button"
               onClick={() => onChange("zodiac", z.value)}
-              style={{
-                padding: "14px 10px",
-                background: selected ? "rgba(124,58,237,0.2)" : "rgba(255,255,255,0.04)",
-                border: `1px solid ${selected ? "rgba(168,85,247,0.6)" : "rgba(139,92,246,0.15)"}`,
-                borderRadius: 10,
-                cursor: "pointer",
-                transition: "all 0.2s",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 4,
-                boxShadow: selected ? "0 0 20px rgba(168,85,247,0.15)" : "none",
-              }}
+              className={`p-4 rounded-xl border flex flex-col items-center gap-1.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 ${
+                selected
+                  ? "bg-purple-500/10 border-purple-500/40 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)]"
+                  : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400 hover:text-slate-200"
+              }`}
             >
-              <span style={{ fontSize: 22 }}>{z.emoji}</span>
-              <span style={{ fontSize: 11, color: selected ? "#c084fc" : "#94a3b8", textAlign: "center", lineHeight: 1.3 }}>
+              <span className="text-2xl">{z.emoji}</span>
+              <span className="text-[11px] font-normal tracking-wide text-center leading-tight">
                 {z.value.split(" ")[0]}
               </span>
             </button>
@@ -342,13 +345,19 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
   );
 }
 
-// ── Step 4: Concern ──────────────────────────────────────────────
+// --- Step 4: Concern ----------------------------------------------
 function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormData, v: string) => void }) {
   return (
-    <motion.div key="step4" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-      <h2 className="display-md" style={{ color: "#f8f8ff", marginBottom: 8 }}>{STEPS[3].title}</h2>
-      <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 24 }}>{STEPS[3].subtitle}</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <motion.div
+      key="step4"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.4 }}
+    >
+      <h2 className="display-md text-[#f8f8ff] mb-2">{STEPS[3].title}</h2>
+      <p className="text-xs md:text-sm text-slate-400 font-light mb-8">{STEPS[3].subtitle}</p>
+      <div className="flex flex-col gap-3">
         {CONCERNS.map((c) => {
           const selected = data.concern === c.value;
           return (
@@ -356,27 +365,19 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
               key={c.value}
               type="button"
               onClick={() => onChange("concern", c.value)}
-              style={{
-                padding: "16px 20px",
-                background: selected ? "rgba(124,58,237,0.15)" : "rgba(255,255,255,0.03)",
-                border: `1px solid ${selected ? "rgba(168,85,247,0.5)" : "rgba(139,92,246,0.12)"}`,
-                borderRadius: 12,
-                cursor: "pointer",
-                transition: "all 0.2s",
-                display: "flex",
-                alignItems: "center",
-                gap: 16,
-                textAlign: "left",
-                boxShadow: selected ? "0 0 20px rgba(168,85,247,0.1)" : "none",
-              }}
+              className={`p-5 rounded-xl border flex items-center gap-5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 text-left ${
+                selected
+                  ? "bg-purple-500/10 border-purple-500/40 text-[#f8f8ff] shadow-[0_0_15px_rgba(168,85,247,0.1)]"
+                  : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400"
+              }`}
             >
-              <span style={{ fontSize: 24, flexShrink: 0 }}>{c.emoji}</span>
-              <div>
-                <p style={{ fontSize: 15, color: selected ? "#f8f8ff" : "#cbd5e1", margin: 0, fontWeight: 400 }}>{c.label}</p>
-                <p style={{ fontSize: 13, color: "#64748b", margin: "2px 0 0" }}>{c.desc}</p>
+              <span className="text-2xl shrink-0">{c.emoji}</span>
+              <div className="flex-1">
+                <p className={`text-sm font-medium ${selected ? "text-purple-300" : "text-[#cbd5e1]"}`}>{c.label}</p>
+                <p className="text-xs text-slate-500 font-light mt-0.5">{c.desc}</p>
               </div>
               {selected && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="2.5" style={{ marginLeft: "auto", flexShrink: 0 }}>
+                <svg className="w-5 h-5 text-[#c084fc] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
               )}
@@ -388,7 +389,7 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
   );
 }
 
-// ── Main Component ───────────────────────────────────────────────
+// --- Main Component -----------------------------------------------
 export default function RecommendationForm() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({ name: "", dob: "", birthTime: "", birthPlace: "", zodiac: "", concern: "" });
@@ -399,7 +400,6 @@ export default function RecommendationForm() {
   const onChange = (key: keyof FormData, value: string) =>
     setFormData((p) => ({ ...p, [key]: value }));
 
-  // Per-step validation
   const canNext = () => {
     if (step === 1) return formData.name.trim().length > 0 && formData.dob.length > 0;
     if (step === 2) return formData.birthPlace.trim().length > 0;
@@ -428,9 +428,9 @@ export default function RecommendationForm() {
       );
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
-        throw new Error(d.error ?? "Something went wrong.");
+        throw new Error((d as { error?: string }).error ?? "Something went wrong.");
       }
-      const data = await res.json();
+      const data = await res.json() as RecommendationResult;
       setResult(data);
       setTimeout(() => {
         document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -443,127 +443,171 @@ export default function RecommendationForm() {
   };
 
   return (
-    <section id="recommend" style={{ padding: "96px 24px" }}>
-      <div className="max-w-2xl mx-auto">
+    <section id="recommend" className="py-24 px-6 relative overflow-hidden">
+      <div className="aura-glow w-[400px] h-[400px] bg-purple-600/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0" />
+      <div className="max-w-2xl mx-auto z-10 relative">
         {/* Section heading */}
-        <div className="text-center mb-12">
-          <div className="planet-badge inline-flex mb-6" style={{ margin: "0 auto 24px" }}>
+        <div className="text-center mb-16">
+          <Badge
+            variant="outline"
+            className="mb-6 border-purple-500/30 bg-purple-500/10 text-purple-300 text-[11px] tracking-widest uppercase px-4 py-1.5 rounded-full"
+          >
             ✨ Vedic Astrology + OpenRouter
-          </div>
-          <h2 className="display-xl" style={{ color: "#f8f8ff", marginBottom: 16 }}>
-            Discover Your
-            <span className="gradient-text"> Sacred Gemstone</span>
+          </Badge>
+          <h2 className="display-xl text-[#f8f8ff] mb-4 font-light">
+            Discover Your{" "}
+            <span className="gradient-text font-medium">Sacred Gemstone</span>
           </h2>
-          <p style={{ fontSize: 16, color: "#94a3b8", maxWidth: 440, margin: "0 auto" }}>
+          <p className="text-sm md:text-base text-slate-400 font-light max-w-sm mx-auto leading-relaxed">
             Answer four simple questions. Our Vedic engine and AI will reveal your perfect gemstones.
           </p>
         </div>
 
         {/* Form card */}
         {!result && (
-          <div className="glass-card" style={{ padding: "40px" }}>
-            <StepProgress current={step} total={4} />
-
-            <AnimatePresence mode="wait">
-              {step === 1 && <Step1 key="s1" data={formData} onChange={onChange} />}
-              {step === 2 && <Step2 key="s2" data={formData} onChange={onChange} />}
-              {step === 3 && <Step3 key="s3" data={formData} onChange={onChange} />}
-              {step === 4 && <Step4 key="s4" data={formData} onChange={onChange} />}
-            </AnimatePresence>
-
-            {/* Error */}
-            {error && (
-              <div style={{ marginTop: 20, padding: "12px 16px", background: "rgba(225,29,72,0.1)", border: "1px solid rgba(225,29,72,0.3)", borderRadius: 8, fontSize: 14, color: "#fca5a5" }}>
-                {error}
+          <Card className="glass-card border-purple-500/15 bg-purple-950/5">
+            <CardContent className="p-8 md:p-12">
+              {/* Progress */}
+              <div className="mb-10">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs text-slate-500 font-light">Step {step} of 4</span>
+                  <span className="text-xs text-[#c084fc] font-medium tracking-wide uppercase">{STEPS[step - 1].title}</span>
+                </div>
+                <Progress
+                  value={(step / 4) * 100}
+                  className="h-[3px] bg-purple-500/10"
+                />
+                <div className="flex justify-between mt-5">
+                  {STEPS.map((s) => (
+                    <div key={s.id} className="flex flex-col items-center">
+                      <div
+                        className="w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 text-[10px] font-normal"
+                        style={{
+                          borderColor: s.id <= step ? "rgba(168,85,247,0.4)" : "rgba(168,85,247,0.15)",
+                          background: s.id < step ? "linear-gradient(135deg,#7e22ce,#a855f7)" : s.id === step ? "rgba(168,85,247,0.12)" : "transparent",
+                          color: s.id === step ? "#c084fc" : s.id < step ? "#ffffff" : "#475569",
+                        }}
+                      >
+                        {s.id < step ? (
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                        ) : (
+                          <span>{s.id}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            )}
 
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-8">
-              <button
-                type="button"
-                onClick={goBack}
-                disabled={step === 1}
-                className="btn-ghost"
-                style={{ opacity: step === 1 ? 0.3 : 1, pointerEvents: step === 1 ? "none" : "auto" }}
-              >
-                ← Back
-              </button>
+              <AnimatePresence mode="wait">
+                {step === 1 && <Step1 key="s1" data={formData} onChange={onChange} />}
+                {step === 2 && <Step2 key="s2" data={formData} onChange={onChange} />}
+                {step === 3 && <Step3 key="s3" data={formData} onChange={onChange} />}
+                {step === 4 && <Step4 key="s4" data={formData} onChange={onChange} />}
+              </AnimatePresence>
 
-              {step < 4 ? (
-                <button
-                  type="button"
-                  onClick={goNext}
-                  disabled={!canNext()}
-                  className="btn-primary"
-                  style={{ opacity: canNext() ? 1 : 0.4, cursor: canNext() ? "pointer" : "not-allowed" }}
-                >
-                  Continue →
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={!canNext() || loading}
-                  className="btn-primary"
-                  style={{ opacity: canNext() && !loading ? 1 : 0.5, cursor: canNext() && !loading ? "pointer" : "not-allowed", minWidth: 180 }}
-                >
-                  {loading ? (
-                    <><span className="spinner" style={{ width: 18, height: 18 }} /> Reading the stars…</>
-                  ) : (
-                    <>✨ Reveal My Gemstones</>
-                  )}
-                </button>
+              {/* Error */}
+              {error && (
+                <div className="mt-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs md:text-sm text-rose-300 leading-relaxed">
+                  {error}
+                </div>
               )}
-            </div>
-          </div>
+
+              {/* Navigation */}
+              <div className="flex items-center justify-between mt-10">
+                <Button
+                  variant="outline"
+                  onClick={goBack}
+                  disabled={step === 1}
+                  className="rounded-full border-purple-500/30 bg-transparent text-[#f8f8ff] hover:bg-purple-500/10 hover:border-purple-500/65 px-7 py-5 text-xs disabled:opacity-30 transition-all duration-300"
+                >
+                  ← Back
+                </Button>
+
+                {step < 4 ? (
+                  <Button
+                    onClick={goNext}
+                    disabled={!canNext()}
+                    className="rounded-full btn-celestial text-white border-0 px-8 py-5 text-xs font-medium tracking-wide disabled:opacity-40"
+                  >
+                    Continue →
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!canNext() || loading}
+                    className="rounded-full btn-celestial text-white border-0 px-8 py-5 text-xs font-medium tracking-wide min-w-[190px] disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner border-t-white shrink-0 mr-2" style={{ width: 14, height: 14 }} />
+                        Reading the stars…
+                      </>
+                    ) : (
+                      <>✨ Reveal My Gemstones</>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Results */}
         {result && (
-          <motion.div id="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+          <motion.div id="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
             {/* Personal message */}
-            <div className="glass-card" style={{ padding: "28px 32px", marginBottom: 32, borderColor: "rgba(168,85,247,0.3)", background: "rgba(124,58,237,0.06)" }}>
-              <div className="flex items-start gap-4">
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: "linear-gradient(135deg,#7c3aed,#a855f7)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 20 }}>
-                  🔮
+            <Card className="glass-card border-purple-500/25 bg-purple-500/[0.03] backdrop-blur-md mb-8">
+              <CardContent className="p-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#7e22ce] to-[#a855f7] flex items-center justify-center shrink-0 text-xl shadow-md">
+                    🔮
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-medium text-purple-400 uppercase tracking-widest mb-1.5">Your Personal Reading</p>
+                    <p className="text-xs md:text-sm text-slate-350 font-light leading-relaxed">{result.personal_message}</p>
+                  </div>
                 </div>
-                <div>
-                  <p style={{ fontSize: 12, fontWeight: 400, color: "#a855f7", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>Your Personal Reading</p>
-                  <p style={{ fontSize: 15, color: "#cbd5e1", lineHeight: 1.7, margin: 0 }}>{result.personal_message}</p>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Cards */}
-            <h3 className="display-lg" style={{ color: "#f8f8ff", marginBottom: 24, textAlign: "center" }}>
+            <h3 className="display-lg text-[#f8f8ff] mb-8 text-center">
               Your Recommended Gemstones
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div className="flex flex-col gap-6">
               {result.gemstones.map((gem, i) => (
                 <GemstoneCard key={gem.name} gem={gem} index={i} />
               ))}
             </div>
 
             {/* Summary card */}
-            <div className="glass-card" style={{ padding: "20px 24px", marginTop: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "center" }}>
-              {[
-                { label: "Rashi", value: result._meta?.profile?.rashi },
-                { label: "Dasha Lord", value: result._meta?.profile?.dashaLord },
-                { label: "Weak Planets", value: result._meta?.profile?.weakPlanets?.join(", ") },
-              ].filter(i => i.value).map((item) => (
-                <div key={item.label} style={{ textAlign: "center" }}>
-                  <p style={{ fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>{item.label}</p>
-                  <p style={{ fontSize: 13, color: "#a855f7", margin: 0 }}>{item.value}</p>
-                </div>
-              ))}
-            </div>
+            <Card className="glass-card border-purple-500/15 bg-purple-950/5 mt-8">
+              <CardContent className="p-6 flex flex-wrap gap-8 justify-center">
+                {[
+                  { label: "Rashi", value: result._meta?.profile?.rashi },
+                  { label: "Dasha Lord", value: result._meta?.profile?.dashaLord },
+                  { label: "Weak Planets", value: result._meta?.profile?.weakPlanets?.join(", ") },
+                ].filter((i) => i.value).map((item) => (
+                  <div key={item.label} className="text-center">
+                    <p className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">{item.label}</p>
+                    <p className="text-xs md:text-sm text-[#c084fc] font-light">{item.value}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
             {/* Reset */}
-            <div className="flex justify-center mt-8">
-              <button className="btn-ghost" onClick={() => { setResult(null); setError(null); setStep(1); setFormData({ name: "", dob: "", birthTime: "", birthPlace: "", zodiac: "", concern: "" }); }}>
+            <div className="flex justify-center mt-10">
+              <Button
+                variant="outline"
+                className="rounded-full border-purple-500/30 bg-transparent text-[#f8f8ff] hover:bg-purple-500/10 hover:border-purple-500/65 px-8 py-5 text-xs"
+                onClick={() => { setResult(null); setError(null); setStep(1); setFormData({ name: "", dob: "", birthTime: "", birthPlace: "", zodiac: "", concern: "" }); }}
+              >
                 Start a New Reading
-              </button>
+              </Button>
             </div>
           </motion.div>
         )}

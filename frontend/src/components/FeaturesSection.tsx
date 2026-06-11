@@ -2,6 +2,9 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const features = [
   {
@@ -26,35 +29,37 @@ const features = [
   },
 ];
 
+const comparison = [
+  ["AI-personalized reasoning", true, false],
+  ["Vedic planetary calculation", true, "partial"],
+  ["Explains WHY each gem", true, false],
+  ["Concern-based focus", true, false],
+  ["Mobile-optimized", true, false],
+  ["Gemstone encyclopedia", true, "partial"],
+] as const;
+
 export default function FeaturesSection() {
   return (
-    <section style={{ padding: "96px 24px" }}>
-      <div className="max-w-6xl mx-auto">
+    <section className="py-24 px-6 relative overflow-hidden">
+      {/* Glow Backdrops */}
+      <div className="aura-glow w-[350px] h-[350px] bg-purple-600/5 -bottom-20 -left-20 z-0" />
+      <div className="aura-glow w-[350px] h-[350px] bg-pink-600/5 -top-20 -right-20 z-0" />
+
+      <div className="max-w-6xl mx-auto z-10 relative">
         {/* Header */}
         <div className="text-center mb-16">
-          <span
-            style={{
-              display: "inline-block",
-              fontSize: 11,
-              fontWeight: 400,
-              color: "#a855f7",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              marginBottom: 16,
-              border: "1px solid rgba(168,85,247,0.3)",
-              padding: "4px 14px",
-              borderRadius: 9999,
-              background: "rgba(168,85,247,0.08)",
-            }}
+          <Badge
+            variant="outline"
+            className="mb-6 border-purple-500/30 bg-purple-500/10 text-purple-300 uppercase tracking-widest text-[11px] px-4 py-1.5 rounded-full"
           >
             Why Gemly is different
-          </span>
-          <h2 className="display-xl" style={{ color: "#f8f8ff", marginBottom: 16 }}>
+          </Badge>
+          <h2 className="display-xl text-[#f8f8ff] mb-4 font-light">
             Ancient wisdom,
             <br />
-            <span className="gradient-text">modern intelligence</span>
+            <span className="gradient-text font-medium">modern intelligence</span>
           </h2>
-          <p style={{ fontSize: 16, color: "#94a3b8", maxWidth: 520, margin: "0 auto" }}>
+          <p className="text-sm md:text-base text-slate-400 font-light max-w-xl mx-auto leading-relaxed">
             Unlike static rule-based tools, Gemly combines genuine Vedic calculation
             with AI reasoning to explain <em>why</em> a gemstone is right for you.
           </p>
@@ -68,25 +73,21 @@ export default function FeaturesSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="glass-card"
-              style={{ padding: "28px 28px" }}
+              transition={{ delay: i * 0.1, duration: 0.6 }}
             >
-              <span style={{ fontSize: 32, marginBottom: 16, display: "block" }}>{f.icon}</span>
-              <h3
-                style={{
-                  fontSize: 20,
-                  fontWeight: 300,
-                  letterSpacing: "-0.2px",
-                  color: "#f8f8ff",
-                  marginBottom: 10,
-                }}
-              >
-                {f.title}
-              </h3>
-              <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.7, margin: 0 }}>
-                {f.desc}
-              </p>
+              <Card className="glass-card border-purple-500/15 bg-purple-950/5 hover:border-purple-500/30 hover:bg-purple-950/10 h-full transition-all duration-300">
+                <CardHeader className="pb-3 p-8">
+                  <span className="text-3xl mb-4 block">{f.icon}</span>
+                  <CardTitle className="text-[#f8f8ff] font-light text-xl tracking-tight">
+                    {f.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="px-8 pb-8 pt-0">
+                  <p className="text-xs md:text-sm text-slate-400 leading-relaxed font-light">
+                    {f.desc}
+                  </p>
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </div>
@@ -96,67 +97,60 @@ export default function FeaturesSection() {
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="glass-card"
-          style={{ padding: "40px 40px", overflow: "hidden" }}
+          transition={{ duration: 0.7 }}
         >
-          <h3
-            style={{
-              fontSize: 20,
-              fontWeight: 300,
-              color: "#f8f8ff",
-              marginBottom: 28,
-              letterSpacing: "-0.2px",
-            }}
-          >
-            Gemly vs. Traditional tools
-          </h3>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: "left", color: "#94a3b8", fontWeight: 400, padding: "0 0 16px", paddingRight: 24 }}>Feature</th>
-                  <th style={{ textAlign: "center", color: "#a855f7", fontWeight: 400, padding: "0 0 16px 0", paddingRight: 24 }}>Gemly</th>
-                  <th style={{ textAlign: "center", color: "#64748b", fontWeight: 400, padding: "0 0 16px 0" }}>Others</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["AI-personalized reasoning", true, false],
-                  ["Vedic planetary calculation", true, "partial"],
-                  ["Explains WHY each gem", true, false],
-                  ["Concern-based focus", true, false],
-                  ["Mobile-optimized", true, false],
-                  ["Gemstone encyclopedia", true, "partial"],
-                ].map(([label, us, them]) => (
-                  <tr key={String(label)} style={{ borderTop: "1px solid rgba(139,92,246,0.12)" }}>
-                    <td style={{ color: "#cbd5e1", padding: "12px 0", paddingRight: 24 }}>{label}</td>
-                    <td style={{ textAlign: "center", padding: "12px 0", paddingRight: 24 }}>
-                      {us === true ? (
-                        <span style={{ color: "#a855f7", fontSize: 16 }}>✓</span>
-                      ) : (
-                        <span style={{ color: "#94a3b8", fontSize: 12 }}>{String(us)}</span>
-                      )}
-                    </td>
-                    <td style={{ textAlign: "center", padding: "12px 0" }}>
-                      {them === false ? (
-                        <span style={{ color: "#475569", fontSize: 16 }}>✗</span>
-                      ) : (
-                        <span style={{ color: "#94a3b8", fontSize: 12 }}>{String(them)}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Card className="glass-card border-purple-500/15 bg-purple-950/5 p-8">
+            <CardHeader className="p-0 mb-6">
+              <CardTitle className="text-[#f8f8ff] font-light text-lg tracking-tight">
+                Gemly vs. Traditional tools
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-left text-xs md:text-sm">
+                  <thead>
+                    <tr className="border-b border-purple-500/10">
+                      <th className="text-slate-400 font-normal pb-4 pr-6">Feature</th>
+                      <th className="text-[#c084fc] font-normal pb-4 text-center pr-6">Gemly</th>
+                      <th className="text-slate-500 font-normal pb-4 text-center">Others</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-purple-500/10">
+                    {comparison.map(([label, us, them]) => (
+                      <tr key={String(label)} className="hover:bg-purple-500/5 transition-colors duration-150">
+                        <td className="text-slate-350 font-light py-4 pr-6">{label}</td>
+                        <td className="py-4 text-center pr-6">
+                          {us === true ? (
+                            <span className="text-[#c084fc] text-base font-semibold">✓</span>
+                          ) : (
+                            <span className="text-slate-400 text-xs font-light">{String(us)}</span>
+                          )}
+                        </td>
+                        <td className="py-4 text-center">
+                          {them === false ? (
+                            <span className="text-slate-600 text-base">✗</span>
+                          ) : (
+                            <span className="text-slate-400 text-xs font-light">{String(them)}</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* CTA */}
         <div className="text-center mt-16">
-          <Link href="/#recommend" className="btn-primary" style={{ fontSize: 16, padding: "14px 36px" }}>
+          <Button
+            render={<Link href="/#recommend" />}
+            size="lg"
+            className="btn-celestial text-white px-9 py-6 text-sm md:text-base rounded-full shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_35px_rgba(168,85,247,0.5)] border-0"
+          >
             Get My Personalized Reading
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

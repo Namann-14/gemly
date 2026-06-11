@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "How It Works",
@@ -59,173 +64,137 @@ export default function HowItWorksPage() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 80 }}>
+      <main className="pt-20">
         {/* Hero */}
-        <section style={{ padding: "80px 24px 64px", textAlign: "center", position: "relative" }}>
+        <section className="px-6 py-20 text-center relative overflow-hidden">
           <div className="hero-gradient" />
-          <div className="dot-grid absolute inset-0" style={{ opacity: 0.3 }} />
-          <div className="relative max-w-3xl mx-auto" style={{ zIndex: 1 }}>
-            <span
-              style={{
-                display: "inline-block",
-                fontSize: 11,
-                fontWeight: 400,
-                color: "#a855f7",
-                background: "rgba(168,85,247,0.1)",
-                border: "1px solid rgba(168,85,247,0.25)",
-                borderRadius: 9999,
-                padding: "5px 14px",
-                marginBottom: 24,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
+          <div className="dot-grid absolute inset-0 opacity-30" />
+          <div className="relative max-w-3xl mx-auto z-10">
+            <Badge
+              variant="outline"
+              className="mb-6 px-3.5 py-1.5 rounded-full border-purple-500/30 bg-purple-500/10 text-purple-300 text-[11px] font-normal tracking-wider uppercase"
             >
               The Science &amp; Spirit Behind Gemly
-            </span>
-            <h1 className="display-xl" style={{ color: "#f8f8ff", marginBottom: 20 }}>
+            </Badge>
+            <h1 className="display-xl text-[#f8f8ff] mb-6 font-light">
               Vedic Astrology meets
               <br />
-              <span className="gradient-text">Artificial Intelligence</span>
+              <span className="gradient-text font-medium">Artificial Intelligence</span>
             </h1>
-            <p style={{ fontSize: 17, color: "#94a3b8", lineHeight: 1.7 }}>
+            <p className="text-base md:text-lg text-slate-400 font-light leading-relaxed">
               A 5,000-year-old tradition, powered by cutting-edge AI reasoning.
               Here's exactly how your personalized reading works.
             </p>
           </div>
         </section>
 
-        <hr className="section-divider" />
+        <div className="max-w-4xl mx-auto px-6">
+          <Separator className="bg-purple-500/10" />
+        </div>
 
         {/* Steps */}
-        <section style={{ padding: "80px 24px" }}>
+        <section className="py-20 px-6">
           <div className="max-w-4xl mx-auto">
-            <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-              {steps.map((step, i) => (
-                <div
+            <div className="flex flex-col gap-8">
+              {steps.map((step) => (
+                <Card
                   key={step.number}
-                  className="glass-card"
-                  style={{ padding: "36px 36px" }}
+                  className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md hover:border-purple-500/30 transition-all duration-300"
                 >
-                  <div className="flex items-start gap-6">
-                    <div style={{ flexShrink: 0 }}>
-                      <div
-                        style={{
-                          width: 56,
-                          height: 56,
-                          borderRadius: 14,
-                          background: "rgba(124,58,237,0.15)",
-                          border: "1px solid rgba(139,92,246,0.3)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: 24,
-                        }}
-                      >
-                        {step.planet}
+                  <CardContent className="p-8 md:p-10">
+                    <div className="flex flex-col md:flex-row items-start gap-6">
+                      <div className="shrink-0">
+                        <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(124,58,237,0.1)]">
+                          {step.planet}
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 400,
-                          color: "#7c3aed",
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
-                          marginBottom: 8,
-                        }}
-                      >
-                        Step {step.number}
-                      </div>
-                      <h2
-                        className="display-md"
-                        style={{ color: "#f8f8ff", marginBottom: 12 }}
-                      >
-                        {step.title}
-                      </h2>
-                      <p style={{ fontSize: 15, color: "#94a3b8", lineHeight: 1.7, marginBottom: 16 }}>
-                        {step.desc}
-                      </p>
-                      <div
-                        style={{
-                          background: "rgba(124,58,237,0.06)",
-                          border: "1px solid rgba(139,92,246,0.2)",
-                          borderRadius: 10,
-                          padding: "16px 18px",
-                        }}
-                      >
-                        <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7, margin: 0 }}>
-                          {step.detail}
+                      <div className="flex-1">
+                        <Badge
+                          variant="ghost"
+                          className="p-0 text-[11px] text-purple-400 font-medium uppercase tracking-widest mb-2 hover:bg-transparent"
+                        >
+                          Step {step.number}
+                        </Badge>
+                        <h2 className="display-md text-[#f8f8ff] mb-3 font-light">
+                          {step.title}
+                        </h2>
+                        <p className="text-sm md:text-base text-slate-400 font-light leading-relaxed mb-4">
+                          {step.desc}
                         </p>
+                        <div className="bg-purple-500/5 border border-purple-500/10 rounded-xl p-4 md:p-5">
+                          <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">
+                            {step.detail}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
         </section>
 
-        <hr className="section-divider" />
+        <div className="max-w-4xl mx-auto px-6">
+          <Separator className="bg-purple-500/10" />
+        </div>
 
         {/* Navagraha table */}
-        <section style={{ padding: "80px 24px" }}>
+        <section className="py-20 px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="display-lg" style={{ color: "#f8f8ff", marginBottom: 12 }}>
+              <h2 className="display-lg text-[#f8f8ff] mb-3 font-light">
                 The Nine Planets &amp; Their Gemstones
               </h2>
-              <p style={{ fontSize: 15, color: "#94a3b8" }}>
+              <p className="text-sm md:text-base text-slate-400 font-light">
                 Classical Vedic Ratna Shastra (Gemstone Scripture)
               </p>
             </div>
-            <div className="glass-card" style={{ overflow: "hidden", padding: 0 }}>
-              {planets.map((p, i) => (
-                <div
-                  key={p.name}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "16px 28px",
-                    borderBottom: i < planets.length - 1 ? "1px solid rgba(139,92,246,0.1)" : "none",
-                    gap: 16,
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      style={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: "50%",
-                        background: p.color,
-                        boxShadow: `0 0 8px ${p.color}80`,
-                        flexShrink: 0,
-                      }}
-                    />
-                    <span style={{ fontSize: 14, color: "#f8f8ff" }}>{p.name}</span>
+            <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md overflow-hidden p-0">
+              <CardContent className="p-0">
+                {planets.map((p, i) => (
+                  <div
+                    key={p.name}
+                    className="flex items-center justify-between px-6 py-4 border-b border-purple-500/10 last:border-0 hover:bg-purple-500/5 transition-colors duration-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{
+                          background: p.color,
+                          boxShadow: `0 0 10px ${p.color}`,
+                        }}
+                      />
+                      <span className="text-sm text-[#f8f8ff] font-light">{p.name}</span>
+                    </div>
+                    <span className="text-sm text-slate-400 font-light">{p.gem}</span>
                   </div>
-                  <span style={{ fontSize: 14, color: "#94a3b8" }}>{p.gem}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
         </section>
 
-        <hr className="section-divider" />
+        <div className="max-w-4xl mx-auto px-6">
+          <Separator className="bg-purple-500/10" />
+        </div>
 
         {/* CTA */}
-        <section style={{ padding: "80px 24px", textAlign: "center" }}>
+        <section className="py-20 px-6 text-center">
           <div className="max-w-xl mx-auto">
-            <h2 className="display-lg" style={{ color: "#f8f8ff", marginBottom: 16 }}>
+            <h2 className="display-lg text-[#f8f8ff] mb-4 font-light">
               Ready to discover yours?
             </h2>
-            <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 32 }}>
+            <p className="text-sm md:text-base text-slate-400 font-light mb-8">
               Get your personalized Vedic gemstone reading in under a minute.
             </p>
-            <a href="/#recommend" className="btn-primary" style={{ fontSize: 16, padding: "14px 36px" }}>
+            <Button
+              render={<Link href="/#recommend" />}
+              size="lg"
+              className="rounded-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] hover:from-[#6d28d9] hover:to-[#9333ea] text-white border-0 px-9 py-6 text-base shadow-[0_0_30px_rgba(124,58,237,0)] hover:shadow-[0_0_35px_rgba(124,58,237,0.4)] transition-all duration-300"
+            >
               Start Your Reading →
-            </a>
+            </Button>
           </div>
         </section>
       </main>
