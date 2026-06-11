@@ -43,27 +43,27 @@ interface FormData {
 
 // --- Data ---------------------------------------------------------
 const ZODIAC_SIGNS = [
-  { value: "Aries (Mesh)",         emoji: "♈" },
-  { value: "Taurus (Vrishabha)",   emoji: "♉" },
-  { value: "Gemini (Mithuna)",     emoji: "♊" },
-  { value: "Cancer (Karka)",       emoji: "♋" },
-  { value: "Leo (Simha)",          emoji: "♌" },
-  { value: "Virgo (Kanya)",        emoji: "♍" },
-  { value: "Libra (Tula)",         emoji: "♎" },
-  { value: "Scorpio (Vrischika)",  emoji: "♏" },
-  { value: "Sagittarius (Dhanu)",  emoji: "♐" },
-  { value: "Capricorn (Makara)",   emoji: "♑" },
-  { value: "Aquarius (Kumbha)",    emoji: "♒" },
-  { value: "Pisces (Meena)",       emoji: "♓" },
+  { value: "Aries (Mesh)", emoji: "♈" },
+  { value: "Taurus (Vrishabha)", emoji: "♉" },
+  { value: "Gemini (Mithuna)", emoji: "♊" },
+  { value: "Cancer (Karka)", emoji: "♋" },
+  { value: "Leo (Simha)", emoji: "♌" },
+  { value: "Virgo (Kanya)", emoji: "♍" },
+  { value: "Libra (Tula)", emoji: "♎" },
+  { value: "Scorpio (Vrischika)", emoji: "♏" },
+  { value: "Sagittarius (Dhanu)", emoji: "♐" },
+  { value: "Capricorn (Makara)", emoji: "♑" },
+  { value: "Aquarius (Kumbha)", emoji: "♒" },
+  { value: "Pisces (Meena)", emoji: "♓" },
 ];
 
 const CONCERNS = [
-  { value: "career",    label: "Career & Ambition",      emoji: "💼", desc: "Professional growth, recognition, leadership" },
-  { value: "love",      label: "Love & Relationships",   emoji: "❤️",  desc: "Romance, partnership, emotional bonds" },
-  { value: "health",    label: "Health & Vitality",      emoji: "🌿", desc: "Physical energy, healing, wellness" },
-  { value: "wealth",    label: "Wealth & Prosperity",    emoji: "💰", desc: "Financial growth, abundance, stability" },
-  { value: "protection",label: "Protection & Safety",    emoji: "🛡️", desc: "Negative energy protection, safety" },
-  { value: "spiritual", label: "Spiritual Growth",       emoji: "🔮", desc: "Enlightenment, intuition, inner peace" },
+  { value: "career", label: "Career & Ambition", emoji: "💼", desc: "Professional growth, recognition, leadership" },
+  { value: "love", label: "Love & Relationships", emoji: "❤️", desc: "Romance, partnership, emotional bonds" },
+  { value: "health", label: "Health & Vitality", emoji: "🌿", desc: "Physical energy, healing, wellness" },
+  { value: "wealth", label: "Wealth & Prosperity", emoji: "💰", desc: "Financial growth, abundance, stability" },
+  { value: "protection", label: "Protection & Safety", emoji: "🛡️", desc: "Negative energy protection, safety" },
+  { value: "spiritual", label: "Spiritual Growth", emoji: "🔮", desc: "Enlightenment, intuition, inner peace" },
 ];
 
 const GEMSTONE_COLORS: Record<string, string> = {
@@ -76,10 +76,10 @@ const GEMSTONE_COLORS: Record<string, string> = {
 };
 
 const STEPS = [
-  { id: 1, title: "About You",       subtitle: "Let's start with your name and when you were born." },
-  { id: 2, title: "Birth Details",   subtitle: "Where and when exactly were you born?" },
-  { id: 3, title: "Your Sign",       subtitle: "Select your Vedic Moon sign (Rashi)." },
-  { id: 4, title: "Your Focus",      subtitle: "What area of life do you want guidance on?" },
+  { id: 1, title: "About You", subtitle: "Let's start with your name and when you were born." },
+  { id: 2, title: "Birth Details", subtitle: "Where and when exactly were you born?" },
+  { id: 3, title: "Your Sign", subtitle: "Select your Vedic Moon sign (Rashi)." },
+  { id: 4, title: "Your Focus", subtitle: "What area of life do you want guidance on?" },
 ];
 
 // --- Gemstone Card ------------------------------------------------
@@ -319,7 +319,7 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
     >
       <h2 className="display-md text-[#f8f8ff] mb-2">{STEPS[2].title}</h2>
       <p className="text-xs md:text-sm text-slate-400 font-light mb-8">{STEPS[2].subtitle}</p>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
         {ZODIAC_SIGNS.map((z) => {
           const selected = data.zodiac === z.value;
           return (
@@ -327,11 +327,10 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
               key={z.value}
               type="button"
               onClick={() => onChange("zodiac", z.value)}
-              className={`p-4 rounded-xl border flex flex-col items-center gap-1.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 ${
-                selected
+              className={`p-4 rounded-xl border flex flex-col items-center gap-1.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 ${selected
                   ? "bg-purple-500/10 border-purple-500/40 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)]"
                   : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400 hover:text-slate-200"
-              }`}
+                }`}
             >
               <span className="text-2xl">{z.emoji}</span>
               <span className="text-[11px] font-normal tracking-wide text-center leading-tight">
@@ -365,11 +364,10 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
               key={c.value}
               type="button"
               onClick={() => onChange("concern", c.value)}
-              className={`p-5 rounded-xl border flex items-center gap-5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 text-left ${
-                selected
+              className={`p-5 rounded-xl border flex items-center gap-5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 text-left ${selected
                   ? "bg-purple-500/10 border-purple-500/40 text-[#f8f8ff] shadow-[0_0_15px_rgba(168,85,247,0.1)]"
                   : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400"
-              }`}
+                }`}
             >
               <span className="text-2xl shrink-0">{c.emoji}</span>
               <div className="flex-1">
@@ -390,7 +388,7 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
 }
 
 // --- Main Component -----------------------------------------------
-export default function RecommendationForm() {
+export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?: boolean }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({ name: "", dob: "", birthTime: "", birthPlace: "", zodiac: "", concern: "" });
   const [loading, setLoading] = useState(false);
@@ -443,25 +441,27 @@ export default function RecommendationForm() {
   };
 
   return (
-    <section id="recommend" className="py-24 px-6 relative overflow-hidden">
-      <div className="aura-glow w-[400px] h-[400px] bg-purple-600/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0" />
-      <div className="max-w-2xl mx-auto z-10 relative">
+    <section id="recommend" className={isEmbedded ? "w-full relative z-10 p-0" : "py-24 px-6 relative overflow-hidden"}>
+      {!isEmbedded && <div className="aura-glow w-[400px] h-[400px] bg-purple-600/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0" />}
+      <div className={isEmbedded ? "w-full relative z-10" : "max-w-7xl mx-auto z-10 relative"}>
         {/* Section heading */}
-        <div className="text-center mb-16">
-          <Badge
-            variant="outline"
-            className="mb-6 border-purple-500/30 bg-purple-500/10 text-purple-300 text-[11px] tracking-widest uppercase px-4 py-1.5 rounded-full"
-          >
-            ✨ Vedic Astrology + OpenRouter
-          </Badge>
-          <h2 className="display-xl text-[#f8f8ff] mb-4 font-light">
-            Discover Your{" "}
-            <span className="gradient-text font-medium">Sacred Gemstone</span>
-          </h2>
-          <p className="text-sm md:text-base text-slate-400 font-light max-w-sm mx-auto leading-relaxed">
-            Answer four simple questions. Our Vedic engine and AI will reveal your perfect gemstones.
-          </p>
-        </div>
+        {!isEmbedded && (
+          <div className="text-center mb-16">
+            <Badge
+              variant="outline"
+              className="mb-6 border-purple-500/30 bg-purple-500/10 text-purple-300 text-[11px] tracking-widest uppercase px-4 py-1.5 rounded-full"
+            >
+              ✨ Vedic Astrology + OpenRouter
+            </Badge>
+            <h2 className="display-xl text-[#f8f8ff] mb-4 font-light">
+              Discover Your{" "}
+              <span className="gradient-text font-medium">Sacred Gemstone</span>
+            </h2>
+            <p className="text-sm md:text-base text-slate-400 font-light max-w-sm mx-auto leading-relaxed">
+              Answer four simple questions. Our Vedic engine and AI will reveal your perfect gemstones.
+            </p>
+          </div>
+        )}
 
         {/* Form card */}
         {!result && (
