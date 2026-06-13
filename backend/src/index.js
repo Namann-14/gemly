@@ -11,23 +11,25 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import { clerkMiddleware } from "@clerk/express";
 
 import recommendRoutes from "./routes/recommend.js";
-import gemstoneRoutes  from "./routes/gemstones.js";
+import gemstoneRoutes from "./routes/gemstones.js";
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT ?? 4000;
 
 // ── Middleware ─────────────────────────────────────────────────────
 app.use(cors({
-  origin:  process.env.FRONTEND_URL
-             ? process.env.FRONTEND_URL.split(",")
-             : ["http://localhost:3000", "https://gemly.app"],
+  origin: process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(",")
+    : ["http://localhost:3000", "https://gemly.app"],
   methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
 app.use(express.json({ limit: "1mb" }));
+app.use(clerkMiddleware());
 
 // ── Request logger ─────────────────────────────────────────────────
 app.use((req, _res, next) => {
@@ -44,8 +46,8 @@ app.get("/health", (_req, res) => {
     timestamp: new Date().toISOString(),
     ai: {
       provider: "OpenRouter",
-      model:    process.env.OPENROUTER_MODEL ?? "google/gemma-4-31b-it:free",
-      key:      (process.env.OPENROUTER_API_KEY || process.env.NVIDIA_API_KEY) ? "configured ✓" : "MISSING — set OPENROUTER_API_KEY",
+      model: process.env.OPENROUTER_MODEL ?? "google/gemma-4-31b-it:free",
+      key: (process.env.OPENROUTER_API_KEY || process.env.NVIDIA_API_KEY) ? "configured ✓" : "MISSING — set OPENROUTER_API_KEY",
     },
   });
 });

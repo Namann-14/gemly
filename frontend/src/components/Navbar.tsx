@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu } from "lucide-react";
+import { Menu, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,9 @@ import {
   SheetClose,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useAuth, SignInButton, UserButton } from "@clerk/nextjs";
+import { useCart } from "@/context/CartContext";
+import CartDrawer from "@/components/CartDrawer";
 
 // --- Nav link definitions --------------------------------------------------
 const navLinks = [
@@ -167,6 +170,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const { setIsCartOpen, cartCount } = useCart();
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -180,9 +185,8 @@ export default function Navbar() {
       style={{ viewTransitionName: "site-header" } as React.CSSProperties}
     >
       <nav
-        className={`w-full rounded-full border pointer-events-auto transition-all duration-300 ${
-          scrolled ? "max-w-3xl" : "max-w-5xl"
-        }`}
+        className={`w-full rounded-full border pointer-events-auto transition-all duration-300 ${scrolled ? "max-w-3xl" : "max-w-5xl"
+          }`}
         style={{
           background: scrolled
             ? "rgba(10,8,18,0.75)"
@@ -233,13 +237,68 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* -- Desktop CTA --------------------------------------------- */}
-          <div className="hidden md:flex items-center">
+          {/* -- Desktop CTA & Auth & Cart --------------------------------------------- */}
+          <div className="hidden md:flex items-center gap-4">
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-slate-300 hover:text-purple-300 transition-colors cursor-pointer bg-transparent border-0 flex items-center justify-center"
+              aria-label="Open Cart"
+            >
+              <ShoppingCart size={18} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 text-[9px] font-bold text-white shadow-lg">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {!isSignedIn ? (
+              <SignInButton mode="modal">
+                <Button
+                  variant="ghost"
+                  className="px-4 py-2 text-xs font-medium text-slate-300 hover:text-white uppercase tracking-wider cursor-pointer hover:bg-transparent"
+                >
+                  Sign In
+                </Button>
+              </SignInButton>
+            ) : (
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-8 h-8 border border-purple-500/30 hover:border-purple-500/70 transition-all",
+                  },
+                }}
+              />
+            )}
+
             <CtaButton scrolled={scrolled} />
           </div>
 
-          {/* -- Mobile: Sheet trigger (hamburger) ----------------------- */}
-          <div className="md:hidden flex items-center">
+          {/* -- Mobile: Cart, Auth, and Hamburger ----------------------- */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-slate-300 hover:text-purple-300 transition-colors cursor-pointer bg-transparent border-0 flex items-center justify-center"
+              aria-label="Open Cart"
+            >
+              <ShoppingCart size={18} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 text-[9px] font-bold text-white shadow-lg">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {isSignedIn && (
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-7 h-7 border border-purple-500/30 hover:border-purple-500/70 transition-all",
+                  },
+                }}
+              />
+            )}
+
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger
                 render={
@@ -338,6 +397,18 @@ export default function Navbar() {
                       onClose={() => setSheetOpen(false)}
                     />
                   ))}
+                  {!isSignedIn && (
+                    <div className="px-3 py-2">
+                      <SignInButton mode="modal">
+                        <Button
+                          onClick={() => setSheetOpen(false)}
+                          className="w-full btn-celestial py-3.5 rounded-xl text-xs font-semibold text-white tracking-wide active:scale-[0.98] transition-all cursor-pointer border-0"
+                        >
+                          Sign In / Register
+                        </Button>
+                      </SignInButton>
+                    </div>
+                  )}
                 </nav>
 
                 {/* Spacer + CTA */}
@@ -372,6 +443,7 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+      <CartDrawer />
     </div>
   );
 }

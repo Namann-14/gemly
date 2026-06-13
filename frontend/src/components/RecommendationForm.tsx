@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth, SignInButton } from "@clerk/nextjs";
+import { Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,6 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { getCdnUrl } from "@/lib/utils";
+import { useCart } from "@/context/CartContext";
+
 
 // --- Types --------------------------------------------------------
 interface GemstoneResult {
@@ -69,99 +74,99 @@ const CONCERNS = [
 const GEMSTONE_CONFIG: Record<string, { color: string; image: string }> = {
   "Cat's Eye": {
     color: "#ca8a04",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Cat_sEye_composed_1080x.png"
+    image: "1img0_Cat_sEye_composed_1080x.png"
   },
   "Pearl": {
     color: "#94a3b8",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Pearl_composed_1080x.png"
+    image: "1img0_Pearl_composed_1080x.png"
   },
   "White Pukhraj": {
     color: "#e2e8f0",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_White_Pukhraj_composed_1080x.png"
+    image: "1img0_White_Pukhraj_composed_1080x.png"
   },
   "Ceylon Pukhraj": {
     color: "#fbbf24",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Ceylon_Pukhraj_composed_1080x.png"
+    image: "1img0_Ceylon_Pukhraj_composed_1080x.png"
   },
   "Peetambari Neelam": {
     color: "#8b5cf6",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Peetambari_Neelam_composed_1080x.png"
+    image: "1img0_Peetambari_Neelam_composed_1080x.png"
   },
   "Ceylon Neelam": {
     color: "#1d4ed8",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Ceylon_Neelam_composed_1080x.png"
+    image: "1img0_Ceylon_Neelam_composed_1080x.png"
   },
   "Neelam": {
     color: "#2563eb",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Neelam_composed_1080x.png"
+    image: "1img0_Neelam_composed_1080x.png"
   },
   "Emerald": {
     color: "#059669",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Emerald_composed_1080x.png"
+    image: "1img0_Emerald_composed_1080x.png"
   },
   "Burmese Ruby": {
     color: "#be123c",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Burmese_Ruby_composed_1080x.png"
+    image: "1img0_Burmese_Ruby_composed_1080x.png"
   },
   "Ruby": {
     color: "#e11d48",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Ruby_composed_1080x.png"
+    image: "1img0_Ruby_composed_1080x.png"
   },
   "Australian Fire Opal": {
     color: "#38bdf8",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Australian_Fire_Opal_composed_1080x.png"
+    image: "1img0_Australian_Fire_Opal_composed_1080x.png"
   },
   "Fire Opal": {
     color: "#f97316",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Fire_Opal_composed_1080x.png"
+    image: "1img0_Fire_Opal_composed_1080x.png"
   },
   "Blue Topaz": {
     color: "#60a5fa",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Blue_Topaz_composed_1080x.png"
+    image: "1img0_Blue_Topaz_composed_1080x.png"
   },
   "White Topaz": {
     color: "#f1f5f9",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_White_Topaz_composed_1080x.png"
+    image: "1img0_White_Topaz_composed_1080x.png"
   },
   "Natural Zircon": {
     color: "#e2e8f0",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Natural_Zircon_composed_1080x.png"
+    image: "1img0_Natural_Zircon_composed_1080x.png"
   },
   "Zirconia": {
     color: "#f8fafc",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Zirconia_composed_1080x.png"
+    image: "1img0_Zirconia_composed_1080x.png"
   },
   "Garnet": {
     color: "#991b1b",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Garnet_composed_1080x.png"
+    image: "1img0_Garnet_composed_1080x.png"
   },
   "Lapis Lazuli": {
     color: "#1e3a8a",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Lapis_Lazuli_composed_1080x.png"
+    image: "1img0_Lapis_Lazuli_composed_1080x.png"
   },
   "Turquoise": {
     color: "#06b6d4",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Turquoise_composed_1080x.png"
+    image: "1img0_Turquoise_composed_1080x.png"
   },
   "Moonstone": {
     color: "#e2e8f0",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Moonstone_composed_1080x.png"
+    image: "1img0_Moonstone_composed_1080x.png"
   },
   "Amethyst": {
     color: "#7e22ce",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Amethyst_composed_1080x.png"
+    image: "1img0_Amethyst_composed_1080x.png"
   },
   "Citrine": {
     color: "#eab308",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Citrine_composed_1080x.png"
+    image: "1img0_Citrine_composed_1080x.png"
   },
   "Tiger Eye": {
     color: "#a16207",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Tiger_Eye_composed_1080x.png"
+    image: "1img0_Tiger_Eye_composed_1080x.png"
   },
   "African Ruby": {
     color: "#9f1239",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_African_Ruby_composed_1080x.png"
+    image: "1img0_African_Ruby_composed_1080x.png"
   },
 };
 
@@ -175,7 +180,7 @@ function getGemstoneConfig(name: string) {
   }
   return {
     color: "#a855f7",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Natural_Zircon_composed_1080x.png"
+    image: "1img0_Natural_Zircon_composed_1080x.png"
   };
 }
 
@@ -188,6 +193,7 @@ const STEPS = [
 
 // --- Gemstone Card ------------------------------------------------
 function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
+  const { addItem } = useCart();
   const [expanded, setExpanded] = useState(false);
   const config = getGemstoneConfig(gem.name);
   const color = config.color;
@@ -229,7 +235,7 @@ function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
           }}
         >
           <img
-            src={image}
+            src={getCdnUrl(image)}
             alt={gem.name}
             className="w-10 h-10 object-contain p-0.5 transition-transform duration-300 group-hover:scale-110"
           />
@@ -259,26 +265,46 @@ function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
         <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">{gem.why_recommended}</p>
       </div>
 
-      {/* Expand toggle */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setExpanded(!expanded)}
-        className="p-0 h-auto font-normal hover:bg-transparent flex items-center gap-1 hover:text-[#f8f8ff] transition-colors"
-        style={{ color }}
-      >
-        {expanded ? "Show less" : "View full details"}
-        <svg
-          className="w-3.5 h-3.5 transition-transform duration-250"
-          style={{ transform: expanded ? "rotate(180deg)" : "none" }}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
+      {/* Action Row containing expand toggle and Add to Cart button */}
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-purple-500/10">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setExpanded(!expanded)}
+          className="p-0 h-auto font-normal hover:bg-transparent flex items-center gap-1 hover:text-[#f8f8ff] transition-colors cursor-pointer"
+          style={{ color }}
         >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
-      </Button>
+          {expanded ? "Show less" : "View full details"}
+          <svg
+            className="w-3.5 h-3.5 transition-transform duration-250"
+            style={{ transform: expanded ? "rotate(180deg)" : "none" }}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </Button>
+
+        <Button
+          onClick={() => {
+            addItem({
+              id: `${gem.name}-5`,
+              name: gem.name,
+              ratti: 5,
+              quantity: 1,
+              pricePerRatti: 1800, // Premium standard rate
+              image: getCdnUrl(image),
+              planet: gem.planet,
+              color: color
+            });
+          }}
+          className="rounded-full bg-purple-950/40 hover:bg-purple-900 border border-purple-500/30 text-purple-200 px-5 py-2.5 text-xs font-medium transition-all cursor-pointer hover:border-purple-500/60"
+        >
+          Add 5 Ratti to Cart
+        </Button>
+      </div>
 
       <AnimatePresence>
         {expanded && (
@@ -501,6 +527,8 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RecommendationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { isSignedIn, getToken } = useAuth();
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
   const onChange = (key: keyof FormData, value: string) =>
     setFormData((p) => ({ ...p, [key]: value }));
@@ -518,16 +546,31 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
 
   const handleSubmit = async () => {
     if (!canNext()) return;
+
+    if (!isSignedIn) {
+      try {
+        localStorage.setItem("gemly_pending_recommendation", JSON.stringify(formData));
+      } catch (err) {
+        console.error("Failed to save pending recommendation:", err);
+      }
+      setShowAuthPrompt(true);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setResult(null);
 
     try {
+      const token = await getToken();
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"}/api/recommend`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
           body: JSON.stringify(formData),
         }
       );
@@ -546,6 +589,51 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isSignedIn && !result && !loading) {
+      const pending = localStorage.getItem("gemly_pending_recommendation");
+      if (pending) {
+        localStorage.removeItem("gemly_pending_recommendation");
+        const parsedData = JSON.parse(pending);
+        setFormData(parsedData);
+        
+        (async () => {
+          setLoading(true);
+          setError(null);
+          setResult(null);
+          setShowAuthPrompt(false);
+          try {
+            const token = await getToken();
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"}/api/recommend`,
+              {
+                method: "POST",
+                headers: { 
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(parsedData),
+              }
+            );
+            if (!res.ok) {
+              const d = await res.json().catch(() => ({}));
+              throw new Error((d as { error?: string }).error ?? "Something went wrong.");
+            }
+            const data = await res.json() as RecommendationResult;
+            setResult(data);
+            setTimeout(() => {
+              document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 100);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+          } finally {
+            setLoading(false);
+          }
+        })();
+      }
+    }
+  }, [isSignedIn, result, loading, getToken]);
 
   return (
     <section id="recommend" className={isEmbedded ? "w-full relative z-10 p-0" : "py-24 px-6 relative overflow-hidden"}>
@@ -609,10 +697,45 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
               </div>
 
               <AnimatePresence mode="wait">
-                {step === 1 && <Step1 key="s1" data={formData} onChange={onChange} />}
-                {step === 2 && <Step2 key="s2" data={formData} onChange={onChange} />}
-                {step === 3 && <Step3 key="s3" data={formData} onChange={onChange} />}
-                {step === 4 && <Step4 key="s4" data={formData} onChange={onChange} />}
+                {showAuthPrompt ? (
+                  <motion.div
+                    key="auth-prompt"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col items-center justify-center py-6 text-center"
+                  >
+                    <div className="w-16 h-16 rounded-full bg-purple-500/5 flex items-center justify-center border border-purple-500/10 mb-4 animate-pulse">
+                      <Sparkles className="text-purple-400" size={24} />
+                    </div>
+                    <h3 className="text-lg font-light text-slate-100 mb-2">Almost There!</h3>
+                    <p className="text-xs text-slate-400 font-light max-w-sm mx-auto leading-relaxed mb-6">
+                      Your cosmic gemstone reading is ready to be written. Sign in to your account to calculate and view your gemstone recommendation.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <SignInButton mode="modal">
+                        <Button className="btn-celestial px-8 py-5 rounded-full text-xs font-semibold text-white tracking-wide transition-all duration-300 cursor-pointer">
+                          Sign In / Register
+                        </Button>
+                      </SignInButton>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowAuthPrompt(false)}
+                        className="rounded-full border-purple-500/30 bg-transparent text-slate-400 hover:text-[#f8f8ff] hover:bg-purple-500/10 hover:border-purple-500/65 px-8 py-5 text-xs transition-all duration-300 cursor-pointer"
+                      >
+                        Edit Details
+                      </Button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <>
+                    {step === 1 && <Step1 key="s1" data={formData} onChange={onChange} />}
+                    {step === 2 && <Step2 key="s2" data={formData} onChange={onChange} />}
+                    {step === 3 && <Step3 key="s3" data={formData} onChange={onChange} />}
+                    {step === 4 && <Step4 key="s4" data={formData} onChange={onChange} />}
+                  </>
+                )}
               </AnimatePresence>
 
               {/* Error */}
@@ -623,41 +746,43 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
               )}
 
               {/* Navigation */}
-              <div className="flex items-center justify-between mt-10">
-                <Button
-                  variant="outline"
-                  onClick={goBack}
-                  disabled={step === 1}
-                  className="rounded-full border-purple-500/30 bg-transparent text-[#f8f8ff] hover:bg-purple-500/10 hover:border-purple-500/65 px-7 py-5 text-xs disabled:opacity-30 transition-all duration-300"
-                >
-                  ← Back
-                </Button>
+              {!showAuthPrompt && (
+                <div className="flex items-center justify-between mt-10">
+                  <Button
+                    variant="outline"
+                    onClick={goBack}
+                    disabled={step === 1}
+                    className="rounded-full border-purple-500/30 bg-transparent text-[#f8f8ff] hover:bg-purple-500/10 hover:border-purple-500/65 px-7 py-5 text-xs disabled:opacity-30 transition-all duration-300"
+                  >
+                    ← Back
+                  </Button>
 
-                {step < 4 ? (
-                  <Button
-                    onClick={goNext}
-                    disabled={!canNext()}
-                    className="rounded-full btn-celestial text-white border-0 px-8 py-5 text-xs font-medium tracking-wide disabled:opacity-40"
-                  >
-                    Continue →
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!canNext() || loading}
-                    className="rounded-full btn-celestial text-white border-0 px-8 py-5 text-xs font-medium tracking-wide min-w-[190px] disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <>
-                        <span className="spinner border-t-white shrink-0 mr-2" style={{ width: 14, height: 14 }} />
-                        Reading the stars…
-                      </>
-                    ) : (
-                      <>✨ Reveal My Gemstones</>
-                    )}
-                  </Button>
-                )}
-              </div>
+                  {step < 4 ? (
+                    <Button
+                      onClick={goNext}
+                      disabled={!canNext()}
+                      className="rounded-full btn-celestial text-white border-0 px-8 py-5 text-xs font-medium tracking-wide disabled:opacity-40"
+                    >
+                      Continue →
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={!canNext() || loading}
+                      className="rounded-full btn-celestial text-white border-0 px-8 py-5 text-xs font-medium tracking-wide min-w-[190px] disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <>
+                          <span className="spinner border-t-white shrink-0 mr-2" style={{ width: 14, height: 14 }} />
+                          Reading the stars…
+                        </>
+                      ) : (
+                        <>✨ Reveal My Gemstones</>
+                      )}
+                    </Button>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

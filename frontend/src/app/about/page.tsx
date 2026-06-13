@@ -128,26 +128,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* AI Disclosure */}
-        <section className="pb-20 px-6">
-          <div className="max-w-4xl mx-auto">
-            <Card className="border-amber-500/20 bg-amber-500/5 backdrop-blur-sm">
-              <CardContent className="p-8">
-                <h3 className="text-base font-normal text-amber-400 mb-3 flex items-center gap-2">
-                  ⚠️ AI Usage Disclosure
-                </h3>
-                <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">
-                  Gemly uses Anthropic's Claude (claude-sonnet-4-20250514) as the primary AI model
-                  for generating gemstone recommendations, with OpenAI GPT-4o as fallback.
-                  All AI outputs are informed by classical Vedic astrology data but should be
-                  treated as guidance for contemplation, not medical or legal advice.
-                  Gemstone recommendations are based on traditional Jyotish principles
-                  and personal reflection.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
       </main>
       <Footer />
     </>

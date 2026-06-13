@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Lens } from "@/components/ui/lens";
-import { cn } from "@/lib/utils";
+import { cn, getCdnUrl } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Gemstone Encyclopedia",
@@ -29,7 +29,7 @@ const GEMSTONES = [
     metal: "Gold or Silver",
     finger: "Little finger",
     day: "Thursday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Cat_sEye_composed_1080x.png",
+    image: "1img0_Cat_sEye_composed_1080x.png",
   },
   {
     slug: "pearl",
@@ -44,7 +44,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Little finger",
     day: "Monday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Pearl_composed_1080x.png",
+    image: "1img0_Pearl_composed_1080x.png",
   },
   {
     slug: "white-pukhraj",
@@ -59,7 +59,7 @@ const GEMSTONES = [
     metal: "White Gold or Silver",
     finger: "Ring or Middle finger",
     day: "Friday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_White_Pukhraj_composed_1080x.png",
+    image: "1img0_White_Pukhraj_composed_1080x.png",
   },
   {
     slug: "ceylon-pukhraj",
@@ -74,7 +74,7 @@ const GEMSTONES = [
     metal: "Gold",
     finger: "Index finger",
     day: "Thursday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_CeylonPukhraj_composed_1080x.png",
+    image: "1img0_CeylonPukhraj_composed_1080x.png",
   },
   {
     slug: "peetambari-neelam",
@@ -89,7 +89,7 @@ const GEMSTONES = [
     metal: "Gold or Panchdhatu",
     finger: "Middle finger",
     day: "Thursday or Saturday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Peetambari_Neelam_composed_1080x.png",
+    image: "1img0_Peetambari_Neelam_composed_1080x.png",
   },
   {
     slug: "ceylon-neelam",
@@ -104,7 +104,7 @@ const GEMSTONES = [
     metal: "Silver or Gold",
     finger: "Middle finger",
     day: "Saturday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_CeylonNeelam_composed_1080x.png",
+    image: "1img0_CeylonNeelam_composed_1080x.png",
   },
   {
     slug: "neelam",
@@ -119,7 +119,7 @@ const GEMSTONES = [
     metal: "Silver or Panchdhatu",
     finger: "Middle finger",
     day: "Saturday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Neelam_composed_1080x.png",
+    image: "1img0_Neelam_composed_1080x.png",
   },
   {
     slug: "emerald",
@@ -134,7 +134,7 @@ const GEMSTONES = [
     metal: "Gold",
     finger: "Little finger",
     day: "Wednesday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Emerald_composed_1080x.png",
+    image: "1img0_Emerald_composed_1080x.png",
   },
   {
     slug: "burmese-ruby",
@@ -149,7 +149,7 @@ const GEMSTONES = [
     metal: "Gold",
     finger: "Ring finger",
     day: "Sunday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Burmese_Ruby_composed_1080x.png",
+    image: "1img0_Burmese_Ruby_composed_1080x.png",
   },
   {
     slug: "ruby",
@@ -164,7 +164,7 @@ const GEMSTONES = [
     metal: "Gold",
     finger: "Ring finger",
     day: "Sunday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Ruby_composed_1080x.png",
+    image: "1img0_Ruby_composed_1080x.png",
   },
   {
     slug: "australian-fire-opal",
@@ -179,7 +179,7 @@ const GEMSTONES = [
     metal: "Silver or White Gold",
     finger: "Ring or Index finger",
     day: "Friday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Australian_Fire_Opal_composed_1080x.png",
+    image: "1img0_Australian_Fire_Opal_composed_1080x.png",
   },
   {
     slug: "fire-opal",
@@ -194,7 +194,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Ring finger",
     day: "Friday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Fire_Opal_composed_1080x.png",
+    image: "1img0_Fire_Opal_composed_1080x.png",
   },
   {
     slug: "blue-topaz",
@@ -209,7 +209,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Index or Middle finger",
     day: "Thursday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Blue_Topaz_composed_1080x.png",
+    image: "1img0_Blue_Topaz_composed_1080x.png",
   },
   {
     slug: "white-topaz",
@@ -224,7 +224,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Ring finger",
     day: "Friday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_White_Topaz_composed_1080x.png",
+    image: "1img0_White_Topaz_composed_1080x.png",
   },
   {
     slug: "natural-zircon",
@@ -239,7 +239,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Ring finger",
     day: "Friday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Natural_Zircon_composed_1080x.png",
+    image: "1img0_Natural_Zircon_composed_1080x.png",
   },
   {
     slug: "zirconia",
@@ -254,7 +254,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Middle or Ring finger",
     day: "Friday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Zirconia_composed_1080x.png",
+    image: "1img0_Zirconia_composed_1080x.png",
   },
   {
     slug: "garnet",
@@ -269,7 +269,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Middle finger",
     day: "Saturday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Garnet_composed_1080x.png",
+    image: "1img0_Garnet_composed_1080x.png",
   },
   {
     slug: "lapis-lazuli",
@@ -284,7 +284,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Middle finger",
     day: "Saturday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Lapis_Lazuli_composed_1080x.png",
+    image: "1img0_Lapis_Lazuli_composed_1080x.png",
   },
   {
     slug: "turquoise",
@@ -299,7 +299,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Ring or Little finger",
     day: "Thursday or Friday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Turquoise_composed_1080x.png",
+    image: "1img0_Turquoise_composed_1080x.png",
   },
   {
     slug: "moonstone",
@@ -314,7 +314,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Little finger",
     day: "Monday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Moonstone_composed_1080x.png",
+    image: "1img0_Moonstone_composed_1080x.png",
   },
   {
     slug: "amethyst",
@@ -329,7 +329,7 @@ const GEMSTONES = [
     metal: "Silver",
     finger: "Middle finger",
     day: "Saturday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Amethyst_composed_1080x.png",
+    image: "1img0_Amethyst_composed_1080x.png",
   },
   {
     slug: "citrine",
@@ -344,7 +344,7 @@ const GEMSTONES = [
     metal: "Gold or Silver",
     finger: "Index finger",
     day: "Thursday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Citrine_composed_1080x.png",
+    image: "1img0_Citrine_composed_1080x.png",
   },
   {
     slug: "tiger-eye",
@@ -359,7 +359,7 @@ const GEMSTONES = [
     metal: "Panchdhatu or Silver",
     finger: "Ring or Middle finger",
     day: "Sunday or Tuesday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_Tiger_Eye_composed_1080x.png",
+    image: "1img0_Tiger_Eye_composed_1080x.png",
   },
   {
     slug: "african-ruby",
@@ -374,7 +374,7 @@ const GEMSTONES = [
     metal: "Gold",
     finger: "Ring finger",
     day: "Sunday",
-    image: "https://humarapandit.com/cdn/shop/files/1img0_African_Ruby_composed_1080x.png",
+    image: "1img0_African_Ruby_composed_1080x.png",
   }
 ];
 
@@ -432,7 +432,7 @@ export default function GemstonesPage() {
                         // }}
                         >
                           <img
-                            src={gem.image}
+                            src={getCdnUrl(gem.image)}
                             alt={gem.name}
                             className="transition-transform duration-500 group-hover:scale-110"
                           />

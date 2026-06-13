@@ -9,6 +9,14 @@
       "env": {
         "API_KEY": "06f8f7ad89188620eefdee3e07a388dfeacd9b143030e603c638a32df9c09960"
       }
+    },
+    "clerk": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.clerk.com/mcp"
+      ]
     }
   }
 }
