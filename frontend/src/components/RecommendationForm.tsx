@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useAuth, SignInButton } from "@clerk/nextjs";
 import { Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,12 +11,15 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { getCdnUrl } from "@/lib/utils";
+import { getCdnUrl, cn } from "@/lib/utils";
+import { Lens } from "@/components/ui/lens";
+
 import { useCart } from "@/context/CartContext";
 
 
 // --- Types --------------------------------------------------------
 interface GemstoneResult {
+  slug: string;
   name: string;
   sanskrit: string;
   planet: string;
@@ -182,6 +186,608 @@ function getGemstoneConfig(name: string) {
     color: "#a855f7",
     image: "1img0_Natural_Zircon_composed_1080x.png"
   };
+}
+
+function getSlugFromName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/'/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+// ── SVGs for Beams and Rays from Aceternity Lens ────────────────────
+
+const Beams = () => {
+  return (
+    <svg
+      width="380"
+      height="315"
+      viewBox="0 0 380 315"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="absolute top-0 left-1/2 -translate-x-1/2 w-full pointer-events-none"
+    >
+      <g filter="url(#filter0_f_120_7473)">
+        <circle cx="34" cy="52" r="114" fill="#6925E7" />
+      </g>
+      <g filter="url(#filter1_f_120_7473)">
+        <circle cx="332" cy="24" r="102" fill="#8A4BFF" />
+      </g>
+      <g filter="url(#filter2_f_120_7473)">
+        <circle cx="191" cy="53" r="102" fill="#802FE3" />
+      </g>
+      <defs>
+        <filter
+          id="filter0_f_120_7473"
+          x="-192"
+          y="-174"
+          width="452"
+          height="452"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="56"
+            result="effect1_foregroundBlur_120_7473"
+          />
+        </filter>
+        <filter
+          id="filter1_f_120_7473"
+          x="70"
+          y="-238"
+          width="524"
+          height="524"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="80"
+            result="effect1_foregroundBlur_120_7473"
+          />
+        </filter>
+        <filter
+          id="filter2_f_120_7473"
+          x="-71"
+          y="-209"
+          width="524"
+          height="524"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="80"
+            result="effect1_foregroundBlur_120_7473"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
+const Rays = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="380"
+      height="397"
+      viewBox="0 0 380 397"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn(
+        "absolute left-0 top-0 pointer-events-none z-[1] opacity-70",
+        className
+      )}
+    >
+      <g filter="url(#filter0_f_120_7480)">
+        <path
+          d="M-37.4202 -76.0163L-18.6447 -90.7295L242.792 162.228L207.51 182.074L-37.4202 -76.0163Z"
+          fill="url(#paint0_linear_120_7480)"
+        />
+      </g>
+      <g
+        style={{ mixBlendMode: "plus-lighter" }}
+        opacity="0.3"
+        filter="url(#filter1_f_120_7480)"
+      >
+        <path
+          d="M-109.54 -36.9027L-84.2903 -58.0902L178.786 193.228L132.846 223.731L-109.54 -36.9027Z"
+          fill="url(#paint1_linear_120_7480)"
+        />
+      </g>
+      <g
+        style={{ mixBlendMode: "plus-lighter" }}
+        opacity="0.86"
+        filter="url(#filter2_f_120_7480)"
+      >
+        <path
+          d="M-100.647 -65.795L-69.7261 -92.654L194.786 157.229L139.51 197.068L-100.647 -65.795Z"
+          fill="url(#paint2_linear_120_7480)"
+        />
+      </g>
+      <g
+        style={{ mixBlendMode: "plus-lighter" }}
+        opacity="0.31"
+        filter="url(#filter3_f_120_7480)"
+      >
+        <path
+          d="M163.917 -89.0982C173.189 -72.1354 80.9618 2.11525 34.7334 30.1553C-11.495 58.1954 -106.505 97.514 -115.777 80.5512C-125.048 63.5885 -45.0708 -3.23233 1.15763 -31.2724C47.386 -59.3124 154.645 -106.061 163.917 -89.0982Z"
+          fill="#8A50FF"
+        />
+      </g>
+      <g
+        style={{ mixBlendMode: "plus-lighter" }}
+        filter="url(#filter4_f_120_7480)"
+      >
+        <path
+          d="M34.2031 13.2222L291.721 269.534"
+          stroke="url(#paint3_linear_120_7480)"
+        />
+      </g>
+      <g
+        style={{ mixBlendMode: "plus-lighter" }}
+        filter="url(#filter5_f_120_7480)"
+      >
+        <path
+          d="M41 -40.9331L298.518 215.378"
+          stroke="url(#paint4_linear_120_7480)"
+        />
+      </g>
+      <g
+        style={{ mixBlendMode: "plus-lighter" }}
+        filter="url(#filter6_f_120_7480)"
+      >
+        <path
+          d="M61.3691 3.8999L317.266 261.83"
+          stroke="url(#paint5_linear_120_7480)"
+        />
+      </g>
+      <g
+        style={{ mixBlendMode: "plus-lighter" }}
+        filter="url(#filter7_f_120_7480)"
+      >
+        <path
+          d="M-1.46191 9.06348L129.458 145.868"
+          stroke="url(#paint6_linear_120_7480)"
+          strokeWidth="2"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_f_120_7480"
+          x="-49.4199"
+          y="-102.729"
+          width="304.212"
+          height="296.803"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="6"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <filter
+          id="filter1_f_120_7480"
+          x="-115.54"
+          y="-64.0903"
+          width="300.326"
+          height="293.822"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="3"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <filter
+          id="filter2_f_120_7480"
+          x="-111.647"
+          y="-103.654"
+          width="317.434"
+          height="311.722"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="5.5"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <filter
+          id="filter3_f_120_7480"
+          x="-212.518"
+          y="-188.71"
+          width="473.085"
+          height="369.366"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="48"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <filter
+          id="filter4_f_120_7480"
+          x="25.8447"
+          y="4.84521"
+          width="274.234"
+          height="273.065"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="6"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <filter
+          id="filter5_f_120_7480"
+          x="32.5312"
+          y="-49.3364"
+          width="274.455"
+          height="273.182"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="6"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <filter
+          id="filter6_f_120_7480"
+          x="53.011"
+          y="-4.45825"
+          width="272.613"
+          height="274.346"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="4"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <filter
+          id="filter7_f_120_7480"
+          x="-10.366"
+          y="0.159668"
+          width="148.728"
+          height="154.613"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feGaussianBlur
+            stdDeviation="4.5"
+            result="effect1_foregroundBlur_120_7480"
+          />
+        </filter>
+        <linearGradient
+          id="paint0_linear_120_7480"
+          x1="-18.6447"
+          y1="-90.7295"
+          x2="229.897"
+          y2="175.762"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#A855F7" stopOpacity="0" />
+          <stop offset="0.54" stopColor="#A855F7" />
+          <stop offset="1" stopColor="#A855F7" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="paint1_linear_120_7480"
+          x1="-84.2903"
+          y1="-58.0902"
+          x2="166.195"
+          y2="207.288"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#A855F7" stopOpacity="0" />
+          <stop offset="0.54" stopColor="#A855F7" />
+          <stop offset="1" stopColor="#A855F7" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="paint2_linear_120_7480"
+          x1="-69.7261"
+          y1="-92.654"
+          x2="181.879"
+          y2="170.82"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#A855F7" stopOpacity="0" />
+          <stop offset="0.54" stopColor="#A855F7" />
+          <stop offset="1" stopColor="#A855F7" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="paint3_linear_120_7480"
+          x1="34.2031"
+          y1="13.2222"
+          x2="291.721"
+          y2="269.534"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#A855F7" stopOpacity="0.4" />
+          <stop offset="1" stopColor="#E2CBFF" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="paint4_linear_120_7480"
+          x1="41.0001"
+          y1="-40.9331"
+          x2="298.518"
+          y2="215.378"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#A855F7" stopOpacity="0.4" />
+          <stop offset="1" stopColor="#E2CBFF" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="paint5_linear_120_7480"
+          x1="61.3691"
+          y1="3.8999"
+          x2="317.266"
+          y2="261.83"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#A855F7" stopOpacity="0.4" />
+          <stop offset="1" stopColor="#E2CBFF" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="paint6_linear_120_7480"
+          x1="-1.46191"
+          y1="9.06348"
+          x2="129.458"
+          y2="145.868"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#A855F7" />
+          <stop offset="1" stopColor="#E2CBFF" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+function RecommendedGemstoneGridCard({ gem, index }: { gem: GemstoneResult; index: number }) {
+  const [expanded, setExpanded] = useState(false);
+  const config = getGemstoneConfig(gem.name);
+  const color = config.color;
+  const image = config.image;
+  // Use the slug provided directly by the AI (guaranteed to be a valid platform slug)
+  const slug = gem.slug || getSlugFromName(gem.name); // fallback just in case
+
+  return (
+    <Lens>
+      <div
+        className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#120f22] to-[#07050e] p-6 border border-purple-500/10 hover:border-purple-500/25 transition-all duration-300 h-full flex flex-col justify-between"
+        style={{
+          boxShadow: `0 10px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px ${color}05`,
+        }}
+      >
+        <Rays />
+        <Beams />
+
+        <div className="relative z-10 flex flex-col h-full justify-between">
+          <div>
+            {/* Header row */}
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[10px] text-slate-400 uppercase tracking-widest font-medium">
+                #{index + 1} Recommended
+              </span>
+              <span
+                className="text-[10px] font-medium uppercase tracking-widest px-2.5 py-1.5 rounded border"
+                style={{
+                  background: `${color}10`,
+                  color: color,
+                  borderColor: `${color}25`,
+                }}
+              >
+                {gem.planet}
+              </span>
+            </div>
+
+            {/* Image Container */}
+            <div className="w-full h-80 rounded-2xl flex items-center justify-center overflow-hidden mb-6 shadow-inner bg-[#0d0a1b]/50">
+              <img
+                src={getCdnUrl(image)}
+                alt={gem.name}
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            </div>
+
+            {/* Title & Sanskrit */}
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xl font-light text-[#f8f8ff] tracking-tight group-hover:text-purple-300 transition-colors">
+                {gem.name}
+              </h2>
+              <span className="text-xs text-slate-400 font-light italic">
+                {gem.sanskrit}
+              </span>
+            </div>
+
+            {/* Tagline */}
+            <p className="text-xs md:text-sm text-slate-400 leading-relaxed font-light italic mb-4">
+              &ldquo;{gem.tagline}&rdquo;
+            </p>
+
+            {/* Personalized Why Recommended Box */}
+            <div
+              className="rounded-xl p-4 mb-4 border text-left"
+              style={{
+                background: `${color}06`,
+                borderColor: `${color}18`,
+              }}
+            >
+              <p className="text-[10px] font-medium text-purple-400 uppercase tracking-widest mb-1">
+                Why this gemstone
+              </p>
+              <p className="text-xs text-slate-300 font-light leading-relaxed">
+                {gem.why_recommended}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            {/* Expand toggle for details */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.preventDefault();
+                setExpanded(!expanded);
+              }}
+              className="p-0 h-auto font-normal hover:bg-transparent flex items-center gap-1 hover:text-[#f8f8ff] transition-colors mb-4 cursor-pointer"
+              style={{ color }}
+            >
+              {expanded ? "Show less info" : "View wear instructions"}
+              <svg
+                className="w-3.5 h-3.5 transition-transform duration-250 animate-duration-200"
+                style={{ transform: expanded ? "rotate(180deg)" : "none" }}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </Button>
+
+            <AnimatePresence>
+              {expanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  className="overflow-hidden text-left"
+                >
+                  <div className="pt-4 flex flex-col gap-4 border-t border-purple-500/10 mb-4">
+                    <div>
+                      <p className="text-[10px] text-slate-400 uppercase tracking-widest font-medium mb-1.5">Properties</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {gem.properties.map((p) => (
+                          <Badge
+                            key={p}
+                            variant="outline"
+                            className="text-[10px] px-2 py-0.5 rounded-full text-slate-300 border-slate-700/50"
+                            style={{ background: `${color}06`, borderColor: `${color}18` }}
+                          >
+                            {p}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 uppercase tracking-widest font-medium mb-1">How to Wear</p>
+                      <p className="text-xs text-slate-350 font-light leading-relaxed">{gem.how_to_wear}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 uppercase tracking-widest font-medium mb-1">Best Day</p>
+                      <p className="text-xs text-slate-350 font-light leading-relaxed">{gem.best_day}</p>
+                    </div>
+                    <div className="border border-amber-500/20 bg-amber-500/5 rounded-xl p-3 flex flex-col gap-1">
+                      <p className="text-[10px] text-amber-400 uppercase tracking-widest font-medium">⚠ Caution</p>
+                      <p className="text-xs text-slate-350 font-light leading-relaxed">{gem.caution}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* View full details Link (to slug page) */}
+            <Link
+              href={`/gemstones/${slug}`}
+              className="flex items-center gap-1 text-xs font-normal transition-opacity duration-300 group-hover:opacity-100 opacity-80 no-underline cursor-pointer"
+              style={{ color }}
+            >
+              Order & View full details
+              <svg className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </Lens>
+  );
 }
 
 const STEPS = [
@@ -461,8 +1067,8 @@ function Step3({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
               type="button"
               onClick={() => onChange("zodiac", z.value)}
               className={`p-4 rounded-xl border flex flex-col items-center gap-1.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 ${selected
-                  ? "bg-purple-500/10 border-purple-500/40 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)]"
-                  : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400 hover:text-slate-200"
+                ? "bg-purple-500/10 border-purple-500/40 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)]"
+                : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400 hover:text-slate-200"
                 }`}
             >
               <span className="text-2xl">{z.emoji}</span>
@@ -498,8 +1104,8 @@ function Step4({ data, onChange }: { data: FormData; onChange: (k: keyof FormDat
               type="button"
               onClick={() => onChange("concern", c.value)}
               className={`p-5 rounded-xl border flex items-center gap-5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500/30 text-left ${selected
-                  ? "bg-purple-500/10 border-purple-500/40 text-[#f8f8ff] shadow-[0_0_15px_rgba(168,85,247,0.1)]"
-                  : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400"
+                ? "bg-purple-500/10 border-purple-500/40 text-[#f8f8ff] shadow-[0_0_15px_rgba(168,85,247,0.1)]"
+                : "bg-white/[0.015] hover:bg-white/[0.03] border-purple-500/10 hover:border-purple-500/25 text-slate-400"
                 }`}
             >
               <span className="text-2xl shrink-0">{c.emoji}</span>
@@ -567,7 +1173,7 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
         `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"}/api/recommend`,
         {
           method: "POST",
-          headers: { 
+          headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
           },
@@ -597,7 +1203,7 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
         localStorage.removeItem("gemly_pending_recommendation");
         const parsedData = JSON.parse(pending);
         setFormData(parsedData);
-        
+
         (async () => {
           setLoading(true);
           setError(null);
@@ -609,7 +1215,7 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
               `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"}/api/recommend`,
               {
                 method: "POST",
-                headers: { 
+                headers: {
                   "Content-Type": "application/json",
                   "Authorization": `Bearer ${token}`
                 },
@@ -809,9 +1415,9 @@ export default function RecommendationForm({ isEmbedded = false }: { isEmbedded?
             <h3 className="display-lg text-[#f8f8ff] mb-8 text-center">
               Your Recommended Gemstones
             </h3>
-            <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {result.gemstones.map((gem, i) => (
-                <GemstoneCard key={gem.name} gem={gem} index={i} />
+                <RecommendedGemstoneGridCard key={gem.name} gem={gem} index={i} />
               ))}
             </div>
 

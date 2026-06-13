@@ -167,12 +167,14 @@ export default function CartDrawer() {
             </p>
 
             <div className="flex flex-col gap-2.5 mt-2">
-              <Button
-                className="w-full btn-celestial py-6 rounded-xl text-xs font-semibold text-white tracking-wide active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer border-0"
-              >
-                Proceed to Checkout
-                <ArrowRight size={14} />
-              </Button>
+              <Link href="https://humarapandit.com/collections/gemstone" target="_blank">
+                <Button
+                  className="w-full btn-celestial py-6 rounded-xl text-xs font-semibold text-white tracking-wide active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer border-0"
+                >
+                  Proceed to Checkout
+                  <ArrowRight size={14} />
+                </Button>
+              </Link>
 
               <SheetClose render={<Button variant="ghost" className="w-full py-5 text-xs text-slate-400 hover:text-[#f8f8ff] transition-all cursor-pointer" />}>
                 Continue Shopping

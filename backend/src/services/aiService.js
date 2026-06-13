@@ -10,6 +10,35 @@
 
 import OpenAI from "openai";
 
+// ── Valid gemstone slugs available on the Gemly platform ────────────
+// This is the SINGLE SOURCE OF TRUTH. Keep in sync with frontend/src/app/gemstones/page.tsx
+export const VALID_GEMSTONE_SLUGS = [
+  "cats-eye",
+  "pearl",
+  "white-pukhraj",
+  "ceylon-pukhraj",
+  "peetambari-neelam",
+  "ceylon-neelam",
+  "neelam",
+  "emerald",
+  "burmese-ruby",
+  "ruby",
+  "australian-fire-opal",
+  "fire-opal",
+  "blue-topaz",
+  "white-topaz",
+  "natural-zircon",
+  "zirconia",
+  "garnet",
+  "lapis-lazuli",
+  "turquoise",
+  "moonstone",
+  "amethyst",
+  "citrine",
+  "tiger-eye",
+  "african-ruby",
+];
+
 // ── System prompt ──────────────────────────────────────────────────
 const SYSTEM_PROMPT = `You are Gemly's AI Vedic Gemologist — a master of classical Jyotish (Vedic astrology) and Ratna Shastra (gemstone science). You have deep knowledge of:
 - Navagraha (9 planets) and their gemstone correspondences
@@ -20,18 +49,24 @@ const SYSTEM_PROMPT = `You are Gemly's AI Vedic Gemologist — a master of class
 
 Your task: Given a person's enriched planetary profile, recommend 2–3 gemstones that will most benefit them, with a focus on their stated life concern.
 
+IMPORTANT — AVAILABLE GEMSTONES:
+You MUST only recommend gemstones that exist on the Gemly platform. Each gemstone has a slug (URL identifier). You MUST set the "slug" field in your response to one of these EXACT slugs — do NOT invent or modify them:
+${VALID_GEMSTONE_SLUGS.map(s => `  - ${s}`).join("\n")}
+
 CRITICAL RULES:
 1. Your response must be ONLY valid JSON — no markdown, no prose before or after, no code fences
-2. Explain WHY each gemstone specifically for THIS person's chart — not generic descriptions
-3. Reference their Dasha lord, weak planets, and rashi ruler in your reasoning
-4. The personal_message should feel warm, personal, and profound — address them by name
-5. Never recommend contradicting gemstones for incompatible chart combinations
-6. caution must be honest — if a stone carries risk for this person, state it clearly
+2. The "slug" field for each gemstone MUST exactly match one of the slugs listed above
+3. Explain WHY each gemstone specifically for THIS person's chart — not generic descriptions
+4. Reference their Dasha lord, weak planets, and rashi ruler in your reasoning
+5. The personal_message should feel warm, personal, and profound — address them by name
+6. Never recommend contradicting gemstones for incompatible chart combinations
+7. caution must be honest — if a stone carries risk for this person, state it clearly
 
 Response format — strict JSON only, nothing else:
 {
   "gemstones": [
     {
+      "slug": "string (MUST be one of the exact slugs listed above, e.g. ruby)",
       "name": "string (English gem name, e.g. Ruby)",
       "sanskrit": "string (Sanskrit name, e.g. Manikya)",
       "planet": "string (ruling planet)",
@@ -175,6 +210,24 @@ export async function getGemstoneRecommendation(profile) {
     throw new Error("OpenRouter returned empty content. Check model name and API key.");
   }
 
-  const result = extractJSON(contentBuffer);
-  return { result, model, reasoning: reasoningBuffer };
+  const rawResult = extractJSON(contentBuffer);
+
+  // ── Post-process: filter out any gemstone with an invalid slug ────
+  if (Array.isArray(rawResult.gemstones)) {
+    const validSet = new Set(VALID_GEMSTONE_SLUGS);
+    const before = rawResult.gemstones.length;
+    rawResult.gemstones = rawResult.gemstones.filter((gem) => {
+      if (!gem.slug || !validSet.has(gem.slug)) {
+        console.warn(`[AI] Removed invalid slug from response: "${gem.slug}" (gem: ${gem.name})`);
+        return false;
+      }
+      return true;
+    });
+    const after = rawResult.gemstones.length;
+    if (after < before) {
+      console.warn(`[AI] Filtered ${before - after} gemstone(s) with invalid slugs.`);
+    }
+  }
+
+  return { result: rawResult, model, reasoning: reasoningBuffer };
 }
