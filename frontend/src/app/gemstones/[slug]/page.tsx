@@ -1,28 +1,30 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import GemstoneDetailClient from "@/components/GemstoneDetailClient";
 
 const GEMSTONES: Record<string, {
   name: string; sanskrit: string; planet: string; color: string;
   tagline: string; properties: string[]; rashi: string[];
   weight: string; metal: string; finger: string; day: string;
   description: string; caution: string; howToWear: string;
+  images: string[]; basePricePerRatti: number;
 }> = {
-  ruby: {
-    name: "Ruby", sanskrit: "Manikya", planet: "Sun", color: "#e11d48",
-    tagline: "The stone of kings, solar vitality, and divine authority.",
-    properties: ["Leadership", "Confidence", "Vitality", "Success", "Courage", "Fame"],
-    rashi: ["Leo", "Aries", "Scorpio"],
-    weight: "3–6 carats", metal: "Gold", finger: "Ring finger (right hand)", day: "Sunday",
-    description: "Ruby, or Manikya in Sanskrit, is the gemstone of the Sun (Surya) — the king of the Navagrahas. A strong Sun in one's chart blesses leadership ability, government favor, paternal relations, and self-confidence. Ruby amplifies the Sun's energy, making it ideal for those seeking career authority, visibility, or healing weak solar energy in their chart.",
-    caution: "Do not wear if Saturn, Venus, or Mercury are dominant in your chart without consulting a Jyotishi. Ruby generates intense heat energy and may increase aggression or ego if worn by the wrong ascendant.",
-    howToWear: "Wear a natural, unheated ruby of minimum 3 carats set in gold on the ring finger of the right hand on a Sunday morning during Surya hora after purifying with Panchgavya and chanting 'Om Hraam Hreem Hroom Sah Suryaya Namaha' 108 times.",
+  "cats-eye": {
+    name: "Cat's Eye", sanskrit: "Lehsuniya", planet: "Ketu", color: "#ca8a04",
+    tagline: "Spiritual liberation, intuition, and Ketu's mystical power.",
+    properties: ["Intuition", "Spirituality", "Liberation", "Protection", "Occult knowledge", "Moksha"],
+    rashi: ["Sagittarius", "Pisces"],
+    weight: "3–6 carats", metal: "Gold or Silver", finger: "Little finger", day: "Thursday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Cat_sEye_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Cat_s_Eye_composed.png"
+    ],
+    basePricePerRatti: 800,
+    description: "Cat's Eye (Lehsuniya) is the gemstone of Ketu, the south node of the Moon — a spiritual, detached, and mystical force. Ketu governs past-life karma, occult knowledge, renunciation, and liberation (Moksha). Cat's Eye is worn to enhance intuitive and psychic abilities, protect from negative energy, and navigate the spiritual dimensions of existence.",
+    caution: "Like Gomed, Cat's Eye should only be worn after careful consultation. Ketu is a separating force — it may cause detachment from material things. Not suitable during Rahu Dasha.",
+    howToWear: "Wear a Chrysoberyl Cat's Eye of 3+ carats showing a distinct chatoyancy band, in gold or silver on the little finger. Chant 'Om Kem Ketave Namaha'.",
   },
   pearl: {
     name: "Pearl", sanskrit: "Moti", planet: "Moon", color: "#94a3b8",
@@ -30,19 +32,89 @@ const GEMSTONES: Record<string, {
     properties: ["Calm", "Intuition", "Relationships", "Memory", "Peace", "Creativity"],
     rashi: ["Cancer", "Scorpio", "Pisces"],
     weight: "4–6 carats", metal: "Silver", finger: "Little finger (right hand)", day: "Monday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Pearl_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Pearl_composed.png"
+    ],
+    basePricePerRatti: 600,
     description: "Pearl is the gemstone of the Moon (Chandra), governing mind, emotions, mother, and intuition. A weak or afflicted Moon can cause emotional instability, insomnia, and relationship difficulties. Pearl calms the mind, enhances emotional intelligence, and strengthens relationships — particularly the bond with one's mother.",
     caution: "Avoid wearing Pearl with Ruby (Sun) as Moon and Sun are natural enemies in Jyotish. Persons with Scorpio Moon may experience intensified emotions.",
     howToWear: "Set a natural saltwater pearl of 4+ carats in silver. Wear on the little finger on a Monday during Shukla Paksha (waxing moon phase) during Chandra hora. Chant 'Om Shraam Shreem Shroom Sah Chandraya Namaha' 108 times.",
   },
-  "red-coral": {
-    name: "Red Coral", sanskrit: "Moonga", planet: "Mars", color: "#ea580c",
-    tagline: "Courage, ambition, and the fire of Mars.",
-    properties: ["Courage", "Energy", "Protection", "Determination", "Mars energy", "Strength"],
-    rashi: ["Aries", "Scorpio"],
-    weight: "6–12 carats", metal: "Gold or Copper", finger: "Ring finger", day: "Tuesday",
-    description: "Red Coral (Moonga) is the gemstone of Mars (Mangal), the planet of courage, energy, siblings, property, and physical vitality. Worn by warriors and leaders throughout history, Red Coral strengthens Mars's protective energy — particularly useful during Mangal Dasha or for those facing delays in marriage due to Manglik dosha.",
-    caution: "Never wear Red Coral with Emerald (Mercury) as Mars and Mercury are enemies. Individuals with weak constitutions or blood pressure issues should consult a physician.",
-    howToWear: "Wear Italian or Japanese coral (minimum 6 carats) in gold or copper on the ring finger on a Tuesday morning during Mangal hora. Purify with Ganga jal and chant 'Om Kraam Kreem Kroom Sah Bhaumaya Namaha'.",
+  "white-pukhraj": {
+    name: "White Pukhraj", sanskrit: "Shwet Pukhraj", planet: "Venus", color: "#e2e8f0",
+    tagline: "Vedic alternative to Diamond, invoking Venusian luxury and creative harmony.",
+    properties: ["Luxury", "Creativity", "Beauty", "Relationships", "Aesthetics"],
+    rashi: ["Taurus", "Libra"],
+    weight: "3–5 carats", metal: "White Gold or Silver", finger: "Ring or Middle finger", day: "Friday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_White_Pukhraj_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_WhitePukhraj_composed.png"
+    ],
+    basePricePerRatti: 2500,
+    description: "White Pukhraj (White Sapphire) is the primary Vedic substitute for Diamond, representing Venus (Shukra), the planet of luxury, artistic excellence, relationships, and refinement. It enhances magnetic attraction, creative flow, and material comfort.",
+    caution: "Ensure it is not worn with Ruby or Pearl, as Venus is incompatible with the Sun and Moon.",
+    howToWear: "Set in white gold or silver on the ring or middle finger on a Friday during Shukra hora. Chant 'Om Draam Dreem Droom Sah Shukraya Namaha' 108 times.",
+  },
+  "ceylon-pukhraj": {
+    name: "Ceylon Pukhraj", sanskrit: "Ceylon Pukhraj", planet: "Jupiter", color: "#fbbf24",
+    tagline: "Premium Sri Lankan Yellow Sapphire for wisdom, health, and prosperity.",
+    properties: ["Wisdom", "Wealth", "Divine Grace", "Good Fortune", "Success"],
+    rashi: ["Sagittarius", "Pisces"],
+    weight: "3–6 carats", metal: "Gold", finger: "Index finger", day: "Thursday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_CeylonPukhraj_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Ceylon_Pukhraj_composed.png"
+    ],
+    basePricePerRatti: 5500,
+    description: "Ceylon Pukhraj is the premium Sri Lankan Yellow Sapphire of Jupiter (Guru), highly revered for its superior clarity and brilliant yellow saturation. It brings unmatched spiritual alignment, massive wealth opportunities, and robust physical health.",
+    caution: "Yellow Sapphire is generally safe for most ascendants, but Capricorn and Aquarius lagna holders should consult a Jyotishi before wearing as Jupiter may rule challenging houses.",
+    howToWear: "Wear a Ceylon Yellow Sapphire of 3+ carats in gold on the index finger on a Thursday morning during Guru hora. Chant 'Om Graam Greem Groom Sah Gurave Namaha' 108 times.",
+  },
+  "peetambari-neelam": {
+    name: "Peetambari Neelam", sanskrit: "Peetambari", planet: "Jupiter & Saturn", color: "#8b5cf6",
+    tagline: "Rare bi-color sapphire combining the forces of Jupiter and Saturn.",
+    properties: ["Balance", "Karmic Justice", "Wealth", "Discernment", "Focus"],
+    rashi: ["Capricorn", "Aquarius", "Sagittarius", "Pisces"],
+    weight: "3–5 carats", metal: "Gold or Panchdhatu", finger: "Middle finger", day: "Thursday or Saturday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Peetambari_Neelam_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_PeetambariNeelam_composed.png"
+    ],
+    basePricePerRatti: 6500,
+    description: "Peetambari Neelam is a highly rare, naturally bi-color sapphire containing both yellow and blue hues. It represents the combined power of Jupiter and Saturn, helping the wearer align spiritual wisdom with disciplined action to achieve rapid material growth.",
+    caution: "Extremely powerful. Requires a trial period to check compatibility before permanent wearing.",
+    howToWear: "Wear in gold or mixed metal on the middle finger on a Thursday or Saturday morning during respective horas. Chant Shani or Guru mantras.",
+  },
+  "ceylon-neelam": {
+    name: "Ceylon Neelam", sanskrit: "Ceylon Neelam", planet: "Saturn", color: "#1d4ed8",
+    tagline: "High-grade Sri Lankan Blue Sapphire for instant karmic elevation.",
+    properties: ["Focus", "Karmic Cleansing", "Success", "Protection", "Willpower"],
+    rashi: ["Capricorn", "Aquarius"],
+    weight: "3–5 carats", metal: "Silver or Gold", finger: "Middle finger", day: "Saturday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_CeylonNeelam_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Ceylon_Neelam_composed.png"
+    ],
+    basePricePerRatti: 7500,
+    description: "Ceylon Neelam (Sri Lankan Blue Sapphire) is the most sought-after and rapidly acting gemstone of Saturn (Shani). It is prized for its cornflower blue color and brings swift success, mental focus, and relief from chronic obstacles to compatible charts.",
+    caution: "Perform a 3-day test trial. Do not wear if you experience bad dreams or sudden accidents during the trial.",
+    howToWear: "Set in silver or gold on the middle finger, wear on Saturday morning during Shani hora after chanting 'Om Praam Preem Proom Sah Shanaischaraya Namaha' 108 times.",
+  },
+  neelam: {
+    name: "Neelam", sanskrit: "Neelam", planet: "Saturn", color: "#2563eb",
+    tagline: "The enforcer of Saturn's discipline and success.",
+    properties: ["Discipline", "Justice", "Protection", "Focus", "Longevity"],
+    rashi: ["Capricorn", "Aquarius"],
+    weight: "3–5 carats", metal: "Silver or Panchdhatu", finger: "Middle finger", day: "Saturday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Neelam_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Neelam_composed.png"
+    ],
+    basePricePerRatti: 4500,
+    description: "Neelam (Blue Sapphire) is the stone of Saturn (Shani). Worn to mitigate Saturnian difficulties, Neelam helps resolve laziness, builds mental clarity, and shields the wearer from negative psychic attacks.",
+    caution: "Mandatory 3-day trial. Never wear with Ruby or Pearl.",
+    howToWear: "Set in silver or panchdhatu. Wear on the middle finger on a Saturday during Shani hora while chanting Shani mantras.",
   },
   emerald: {
     name: "Emerald", sanskrit: "Panna", planet: "Mercury", color: "#059669",
@@ -50,59 +122,254 @@ const GEMSTONES: Record<string, {
     properties: ["Intelligence", "Creativity", "Business", "Communication", "Wit", "Analytics"],
     rashi: ["Gemini", "Virgo"],
     weight: "3–5 carats", metal: "Gold", finger: "Little finger", day: "Wednesday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Emerald_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Emerald_composed.png"
+    ],
+    basePricePerRatti: 3500,
     description: "Emerald (Panna) is the gemstone of Mercury (Budha), planet of intellect, communication, commerce, and analytical ability. Ideal for students, writers, traders, and IT professionals, Emerald sharpens the mind and enhances the ability to communicate, negotiate, and learn. A strong Mercury in the chart brings wit, adaptability, and business acumen.",
     caution: "Do not wear with Red Coral or Pearl as Mercury is inimical to Mars and Moon. Persons sensitive to skin may experience reactions to certain metal settings.",
     howToWear: "Wear a Colombian or Zambian emerald of 3+ carats in gold on the little finger on a Wednesday during Budha hora. Chant 'Om Braam Breem Broom Sah Budhaya Namaha' 108 times.",
   },
-  "yellow-sapphire": {
-    name: "Yellow Sapphire", sanskrit: "Pukhraj", planet: "Jupiter", color: "#d97706",
-    tagline: "Wisdom, prosperity, and Jupiter's boundless grace.",
-    properties: ["Wisdom", "Prosperity", "Luck", "Spirituality", "Health", "Marriage"],
-    rashi: ["Sagittarius", "Pisces"],
-    weight: "3–6 carats", metal: "Gold", finger: "Index finger", day: "Thursday",
-    description: "Yellow Sapphire (Pukhraj) is perhaps the most universally beneficial gemstone in Jyotish, as Jupiter is the great benefic planet (Guru). It blesses the wearer with wisdom, prosperity, a good spouse, children, and spiritual development. Particularly recommended for women seeking marriage and for anyone going through Jupiter Dasha.",
-    caution: "Yellow Sapphire is generally safe for most ascendants, but Capricorn and Aquarius lagna holders should consult a Jyotishi before wearing as Jupiter may rule challenging houses.",
-    howToWear: "Wear a Ceylon or Bangkok Yellow Sapphire of 3+ carats in gold on the index finger on a Thursday morning during Guru hora. Chant 'Om Graam Greem Groom Sah Gurave Namaha' 108 times.",
+  "burmese-ruby": {
+    name: "Burmese Ruby", sanskrit: "Burma Manikya", planet: "Sun", color: "#be123c",
+    tagline: "Ultra-premium Burmese Ruby for maximum solar power and vitality.",
+    properties: ["Royal Status", "Self-Expression", "Vitality", "Authority", "Fame"],
+    rashi: ["Leo", "Aries", "Scorpio"],
+    weight: "2–4 carats", metal: "Gold", finger: "Ring finger", day: "Sunday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Burmese_Ruby_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_BurmeseRuby_composed.png"
+    ],
+    basePricePerRatti: 9500,
+    description: "Burmese Ruby is the ultimate quality of Ruby (Manikya), renowned for its deep pigeon-blood red hue. As the strongest channel for Sun (Surya) energy, it promotes exceptional leadership, fame, self-worth, and heart health.",
+    caution: "Intense energy. Consult an astrologer if you have elevated anger or high blood pressure.",
+    howToWear: "Wear in gold on the ring finger of the right hand on Sunday morning during Surya hora. Chant 'Om Hraam Hreem Hroom Sah Suryaya Namaha' 108 times.",
   },
-  diamond: {
-    name: "Diamond", sanskrit: "Heera", planet: "Venus", color: "#e2e8f0",
-    tagline: "Love, luxury, artistic beauty, and Venusian allure.",
-    properties: ["Love", "Luxury", "Creativity", "Harmony", "Beauty", "Arts"],
+  ruby: {
+    name: "Ruby", sanskrit: "Manikya", planet: "Sun", color: "#e11d48",
+    tagline: "The stone of kings, solar vitality, and divine authority.",
+    properties: ["Leadership", "Confidence", "Vitality", "Success", "Courage", "Fame"],
+    rashi: ["Leo", "Aries", "Scorpio"],
+    weight: "3–6 carats", metal: "Gold", finger: "Ring finger (right hand)", day: "Sunday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Ruby_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Ruby_composed.png"
+    ],
+    basePricePerRatti: 2500,
+    description: "Ruby, or Manikya in Sanskrit, is the gemstone of the Sun (Surya) — the king of the Navagrahas. A strong Sun in one's chart blesses leadership ability, government favor, paternal relations, and self-confidence. Ruby amplifies the Sun's energy, making it ideal for those seeking career authority, visibility, or healing weak solar energy in their chart.",
+    caution: "Do not wear if Saturn, Venus, or Mercury are dominant in your chart without consulting a Jyotishi. Ruby generates intense heat energy and may increase aggression or ego if worn by the wrong ascendant.",
+    howToWear: "Wear a natural, unheated ruby of minimum 3 carats set in gold on the ring finger of the right hand on a Sunday morning during Surya hora after purifying with Panchgavya and chanting 'Om Hraam Hreem Hroom Sah Suryaya Namaha' 108 times.",
+  },
+  "australian-fire-opal": {
+    name: "Australian Fire Opal", sanskrit: "Opal", planet: "Venus", color: "#38bdf8",
+    tagline: "Exquisite Australian Opal representing luxury, glamour, and beauty.",
+    properties: ["Glamour", "Love", "Luxury", "Creative Mastery", "Beauty"],
     rashi: ["Taurus", "Libra"],
-    weight: "0.5–1 carat", metal: "White Gold or Platinum", finger: "Middle finger", day: "Friday",
-    description: "Diamond (Heera) is the gemstone of Venus (Shukra), planet of love, beauty, luxury, arts, and sensory pleasure. A strong Venus brings romantic success, appreciation of beauty, artistic talent, and material comforts. Diamond is particularly powerful for artists, designers, entertainment professionals, and those seeking to enhance relationships.",
-    caution: "Diamond should not be worn with Ruby or Pearl as Venus is inimical to Sun and Moon. The stone carries intense energy — wearing a flawed or heat-treated diamond can create negative effects.",
-    howToWear: "Wear a natural, untreated diamond (minimum 0.3 carat) in white gold or platinum on the middle finger on a Friday during Shukra hora. Chant 'Om Draam Dreem Droom Sah Shukraya Namaha'.",
+    weight: "5–8 carats", metal: "Silver or White Gold", finger: "Ring or Index finger", day: "Friday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Australian_Fire_Opal_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Australian_Fire_Opal_composed.png"
+    ],
+    basePricePerRatti: 2200,
+    description: "Australian Fire Opal, with its unique play of colors, is a luxurious gemstone of Venus (Shukra). It enhances aesthetic skills, brings success in artistic professions, and attracts luxury and romance into the wearer's life.",
+    caution: "Generally safe, but avoid if you seek isolation or struggle with sensory overload.",
+    howToWear: "Wear in silver or white gold on the ring finger of the right hand on Friday morning during Shukra hora. Chant 'Om Shukraya Namaha' 108 times.",
   },
-  "blue-sapphire": {
-    name: "Blue Sapphire", sanskrit: "Neelam", planet: "Saturn", color: "#2563eb",
-    tagline: "Discipline, karmic acceleration, and Saturn's iron will.",
-    properties: ["Discipline", "Focus", "Career", "Justice", "Karma", "Longevity"],
-    rashi: ["Capricorn", "Aquarius"],
-    weight: "3–5 carats", metal: "Silver or Gold", finger: "Middle finger", day: "Saturday",
-    description: "Blue Sapphire (Neelam) is the most powerful and fastest-acting gemstone in Vedic astrology — a double-edged sword. Saturn, its ruling planet, is the karmic enforcer. For those whose charts align, Neelam can dramatically accelerate career growth and remove obstacles. For those incompatible, it can cause serious setbacks. A 3-day trial before full commitment is strongly advised.",
-    caution: "MOST IMPORTANT: Always conduct a 3-day trial before permanently wearing Blue Sapphire. Wear it on a Saturday, observe your day — if negative events cluster, remove immediately. Not suitable for Leo, Cancer, or Scorpio ascendants without extensive consultation.",
-    howToWear: "Wear a Ceylon or Burmese Blue Sapphire of 3+ carats in silver or gold on the middle finger on a Saturday during Shani hora. First perform a 3-day trial. Chant 'Om Praam Preem Proom Sah Shanaischaraya Namaha'.",
+  "fire-opal": {
+    name: "Fire Opal", sanskrit: "Opal", planet: "Venus", color: "#f97316",
+    tagline: "The fiery stone of artistic inspiration and marital bliss.",
+    properties: ["Passion", "Aesthetics", "Relationships", "Joy", "Sensuality"],
+    rashi: ["Taurus", "Libra"],
+    weight: "4–7 carats", metal: "Silver", finger: "Ring finger", day: "Friday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Fire_Opal_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Fire_Opal_composed.png"
+    ],
+    basePricePerRatti: 1200,
+    description: "Fire Opal is associated with Venus (Shukra). It helps release artistic blocks, improves marital harmony, and boosts personal magnetism.",
+    caution: "Handle with care as opals are relatively soft gemstones.",
+    howToWear: "Set in silver and wear on a Friday during Shukra hora. Chant Venus mantras.",
   },
-  hessonite: {
-    name: "Hessonite", sanskrit: "Gomed", planet: "Rahu", color: "#92400e",
-    tagline: "Protection from illusion, clarity, and Rahu's liberation.",
-    properties: ["Clarity", "Protection", "Focus", "Ambition", "Rahu pacification", "Anti-confusion"],
-    rashi: ["Gemini", "Virgo"],
-    weight: "6–8 carats", metal: "Silver", finger: "Middle finger", day: "Saturday",
-    description: "Hessonite Garnet (Gomed) is the gemstone of Rahu, the north node of the Moon — a shadowy planet associated with illusion, obsession, ambition, and karmic debt. When Rahu is prominently placed or causing confusion and delays, Gomed can help the wearer gain clarity, focus, and material success. It is particularly useful during Rahu Dasha.",
-    caution: "Rahu is a malefic shadow planet and Gomed's effects are powerful and unpredictable. Always consult a qualified Jyotishi before wearing. Avoid if in Ketu Dasha.",
-    howToWear: "Wear a natural Hessonite of 6+ carats in silver on the middle finger on a Saturday or Wednesday. Chant 'Om Raam Rahave Namaha' 108 times.",
-  },
-  "cats-eye": {
-    name: "Cat's Eye", sanskrit: "Lehsuniya", planet: "Ketu", color: "#ca8a04",
-    tagline: "Spiritual liberation, intuition, and Ketu's mystical power.",
-    properties: ["Intuition", "Spirituality", "Liberation", "Protection", "Occult knowledge", "Moksha"],
+  "blue-topaz": {
+    name: "Blue Topaz", sanskrit: "Pushparag Uparatna", planet: "Jupiter", color: "#60a5fa",
+    tagline: "A peaceful substitute for Pukhraj to enhance communication and wisdom.",
+    properties: ["Intellect", "Communication", "Mental Peace", "Learning", "Wisdom"],
     rashi: ["Sagittarius", "Pisces"],
-    weight: "3–6 carats", metal: "Gold or Silver", finger: "Little finger", day: "Thursday",
-    description: "Cat's Eye (Lehsuniya) is the gemstone of Ketu, the south node of the Moon — a spiritual, detached, and mystical force. Ketu governs past-life karma, occult knowledge, renunciation, and liberation (Moksha). Cat's Eye is worn to enhance intuitive and psychic abilities, protect from negative energy, and navigate the spiritual dimensions of existence.",
-    caution: "Like Gomed, Cat's Eye should only be worn after careful consultation. Ketu is a separating force — it may cause detachment from material things. Not suitable during Rahu Dasha.",
-    howToWear: "Wear a Chrysoberyl Cat's Eye of 3+ carats showing a distinct chatoyancy band, in gold or silver on the little finger. Chant 'Om Kem Ketave Namaha'.",
+    weight: "5–10 carats", metal: "Silver", finger: "Index or Middle finger", day: "Thursday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Blue_Topaz_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Blue_Topaz_composed.png"
+    ],
+    basePricePerRatti: 400,
+    description: "Blue Topaz is an excellent sub-stone (Uparatna) for Jupiter. It helps quieten an overactive mind, improves communication abilities, and assists in learning complex subjects.",
+    caution: "Ensure it does not clash with Saturn's gemstones if they are malefic in your chart.",
+    howToWear: "Wear in silver on the index finger on Thursday mornings during Guru hora.",
+  },
+  "white-topaz": {
+    name: "White Topaz", sanskrit: "Dantur", planet: "Venus", color: "#f1f5f9",
+    tagline: "Clear cosmic substitute for Venusian energy and creative clarity.",
+    properties: ["Clarity", "Creative Flow", "Harmony", "Vitality", "Aesthetics"],
+    rashi: ["Taurus", "Libra"],
+    weight: "5–8 carats", metal: "Silver", finger: "Ring finger", day: "Friday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_White_Topaz_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_White_Topaz_composed.png"
+    ],
+    basePricePerRatti: 500,
+    description: "White Topaz is a beautiful semi-precious alternative to Diamond. Guided by Venus (Shukra), it removes confusion, attracts positive relationships, and encourages aesthetic appreciation.",
+    caution: "Avoid wearing with Sun or Moon gemstones.",
+    howToWear: "Wear in silver on the ring finger on Friday morning during Shukra hora.",
+  },
+  "natural-zircon": {
+    name: "Natural Zircon", sanskrit: "Zircon", planet: "Venus", color: "#e2e8f0",
+    tagline: "Ancient, highly refractive alternative to Diamond for wealth and glamour.",
+    properties: ["Magnetic Aura", "Material Wealth", "Happiness", "Arts", "Beauty"],
+    rashi: ["Taurus", "Libra"],
+    weight: "4–7 carats", metal: "Silver", finger: "Ring finger", day: "Friday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Natural_Zircon_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Natural_Zircon_composed.png"
+    ],
+    basePricePerRatti: 900,
+    description: "Natural Zircon is one of the oldest minerals on Earth, carrying strong Venus (Shukra) frequencies. Its intense brilliance matches Diamond and helps the wearer achieve prosperity, artistic breakthrough, and romantic satisfaction.",
+    caution: "Do not confuse with synthetic cubic zirconia. Ensure the zircon is natural.",
+    howToWear: "Wear in silver on the ring finger on Friday during Shukra hora.",
+  },
+  zirconia: {
+    name: "Zirconia", sanskrit: "Kritrim Diamond", planet: "Venus (Substitute)", color: "#f8fafc",
+    tagline: "Affordable modern alternative for channeling light Venusian vibes.",
+    properties: ["Aesthetic appeal", "Youthfulness", "Modern Luck", "Lightness", "Grace"],
+    rashi: ["Taurus", "Libra"],
+    weight: "4–8 carats", metal: "Silver", finger: "Middle or Ring finger", day: "Friday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Zirconia_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Zirconia_composed.png"
+    ],
+    basePricePerRatti: 150,
+    description: "Zirconia (Cubic Zirconia) acts as a modern, budget-friendly substitute (Uparatna) for Venus. While carrying lesser astrological charge than natural diamond, its highly refractive property helps invite positive aesthetic and luxury vibes.",
+    caution: "Astrological strength is lower than natural gemstones. Wear mainly for fashion and light astrological support.",
+    howToWear: "Wear in silver on the ring or middle finger on Friday morning.",
+  },
+  garnet: {
+    name: "Garnet", sanskrit: "Tamra", planet: "Rahu", color: "#991b1b",
+    tagline: "Grounding protection, ambition, and Rahu's drive.",
+    properties: ["Energy", "Rahu Protection", "Root Healing", "Fame", "Success"],
+    rashi: ["Aquarius", "Taurus", "Libra"],
+    weight: "4–8 carats", metal: "Silver", finger: "Middle finger", day: "Saturday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Garnet_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Garnet_composed.png"
+    ],
+    basePricePerRatti: 300,
+    description: "Garnet is associated with Rahu. It acts as an anchor, helping the wearer overcome fear, gain popularity, and build a protective shield against psychic attacks.",
+    caution: "Rahu energy is intense. Avoid if your chart indicates negative Rahu placements.",
+    howToWear: "Set in silver and wear on the middle finger on a Saturday morning.",
+  },
+  "lapis-lazuli": {
+    name: "Lapis Lazuli", sanskrit: "Rajavarta", planet: "Saturn (Uparatna)", color: "#1e3a8a",
+    tagline: "The royal blue stone of inner truth, wisdom, and Saturnian protection.",
+    properties: ["Truth", "Third Eye", "Protection", "Wisdom", "Communication"],
+    rashi: ["Capricorn", "Aquarius"],
+    weight: "6–10 carats", metal: "Silver", finger: "Middle finger", day: "Saturday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Lapis_Lazuli_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Lapis_Lazuli_composed.png"
+    ],
+    basePricePerRatti: 250,
+    description: "Lapis Lazuli is a revered substitute for Blue Sapphire, associated with Saturn (Shani). It is excellent for third eye activation, mental clarity, and relieving Saturn-related depression.",
+    caution: "Avoid if you suffer from extreme introversion or passive energy.",
+    howToWear: "Set in silver and wear on the middle finger on a Saturday during Saturn hora.",
+  },
+  turquoise: {
+    name: "Turquoise", sanskrit: "Firoza", planet: "Jupiter & Venus", color: "#06b6d4",
+    tagline: "The legendary talisman of travel safety, health, and spiritual growth.",
+    properties: ["Protection", "Healing", "Wealth", "Travel Safety", "Calmness"],
+    rashi: ["Sagittarius", "Pisces", "Taurus", "Libra"],
+    weight: "5–10 carats", metal: "Silver", finger: "Ring or Little finger", day: "Thursday or Friday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Turquoise_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Turquoise_composed.png"
+    ],
+    basePricePerRatti: 350,
+    description: "Turquoise (Firoza) is a widely popular astrological protector, representing Jupiter and Venus. It guards the wearer from accidents, negative vibes, and supports overall physiological wellness.",
+    caution: "Always purchase natural turquoise, as dyed synthetic imitations are very common.",
+    howToWear: "Wear in silver on the ring or index finger on a Thursday or Friday morning.",
+  },
+  moonstone: {
+    name: "Moonstone", sanskrit: "Chandrakant Mani", planet: "Moon (Uparatna)", color: "#e2e8f0",
+    tagline: "The glowing lunar gem for emotional balance and divine feminine energy.",
+    properties: ["Calm", "Feminine Energy", "Intuition", "Sleep", "Peace"],
+    rashi: ["Cancer"],
+    weight: "5–8 carats", metal: "Silver", finger: "Little finger", day: "Monday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Moonstone_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Moonstone_composed.png"
+    ],
+    basePricePerRatti: 200,
+    description: "Moonstone (Chandrakant Mani) is the secondary gemstone for the Moon (Chandra). It possesses a soft, soothing energy that relieves anxiety, balances hormones, and enhances spiritual intuition.",
+    caution: "Do not wear if you suffer from fluid retention issues without guidance.",
+    howToWear: "Set in silver on the little or ring finger on a Monday evening during Shukla Paksha.",
+  },
+  amethyst: {
+    name: "Amethyst", sanskrit: "Katela", planet: "Saturn (Uparatna)", color: "#7e22ce",
+    tagline: "The stone of spiritual sobriety, meditative peace, and Saturn's grace.",
+    properties: ["Sobriety", "Intuition", "Calmness", "Spiritual Growth", "Focus"],
+    rashi: ["Capricorn", "Aquarius"],
+    weight: "4–8 carats", metal: "Silver", finger: "Middle finger", day: "Saturday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Amethyst_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Amethyst_composed.png"
+    ],
+    basePricePerRatti: 300,
+    description: "Amethyst (Katela or Jamunia) is the primary Uparatna for Saturn (Shani). It converts negative thoughts into spiritual energy, heals addictive tendencies, and relieves anxiety.",
+    caution: "Do not pair with Sun or Mars stones.",
+    howToWear: "Set in silver on the middle finger on a Saturday evening during Shani hora.",
+  },
+  citrine: {
+    name: "Citrine", sanskrit: "Sunela", planet: "Jupiter (Uparatna)", color: "#eab308",
+    tagline: "The merchant's stone of wealth, optimism, and solar plexus energy.",
+    properties: ["Abundance", "Confidence", "Optimism", "Mental Focus", "Success"],
+    rashi: ["Sagittarius", "Pisces"],
+    weight: "4–8 carats", metal: "Gold or Silver", finger: "Index finger", day: "Thursday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Citrine_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Citrine_composed.png"
+    ],
+    basePricePerRatti: 400,
+    description: "Citrine (Sunela) is the sub-stone for Jupiter. It boosts self-confidence, sparks creative enterprise, and attracts business luck and prosperity.",
+    caution: "Safe for almost all, but consult if you have high ego or liver issues.",
+    howToWear: "Set in gold or silver on the index finger on Thursday mornings during Guru hora.",
+  },
+  "tiger-eye": {
+    name: "Tiger Eye", sanskrit: "Tiger Eye", planet: "Sun & Mars", color: "#a16207",
+    tagline: "Courage, grounding focus, and absolute self-confidence.",
+    properties: ["Willpower", "Protection", "Action", "Vitality", "Confidence"],
+    rashi: ["Leo", "Aries", "Scorpio"],
+    weight: "6–10 carats", metal: "Panchdhatu or Silver", finger: "Ring or Middle finger", day: "Sunday or Tuesday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_Tiger_Eye_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_Tiger_Eye_composed.png"
+    ],
+    basePricePerRatti: 180,
+    description: "Tiger Eye is a powerful Uparatna that channels Sun and Mars energy. It is worn for building self-confidence, grounding overactive emotions, and protecting the auric field.",
+    caution: "Generally very safe. Cleanse regularly to maintain its grounding vibration.",
+    howToWear: "Wear in silver or panchdhatu on a Tuesday or Sunday morning.",
+  },
+  "african-ruby": {
+    name: "African Ruby", sanskrit: "African Manikya", planet: "Sun", color: "#9f1239",
+    tagline: "Deep, grounding African Ruby for leadership, courage, and vitality.",
+    properties: ["Leadership", "Vitality", "Confidence", "Action", "Courage"],
+    rashi: ["Leo", "Aries", "Scorpio"],
+    weight: "3–6 carats", metal: "Gold", finger: "Ring finger", day: "Sunday",
+    images: [
+      "https://humarapandit.com/cdn/shop/files/1img0_African_Ruby_composed_1080x.png",
+      "https://humarapandit.com/cdn/shop/files/img0_African_Ruby_composed.png"
+    ],
+    basePricePerRatti: 1500,
+    description: "African Ruby is a highly potent, beautifully rich-colored variety of Ruby representing the Sun (Surya). It aids in professional success, heart strength, and building personal boundaries.",
+    caution: "Avoid pairing with diamonds or blue sapphires.",
+    howToWear: "Set in gold and wear on the ring finger on Sunday mornings.",
   },
 };
 
@@ -130,185 +397,8 @@ export default async function GemstoneDetailPage({ params }: Props) {
   return (
     <>
       <Navbar />
-      <main className="pt-20">
-        {/* Hero */}
-        <section className="px-6 py-16 relative overflow-hidden">
-          <div className="hero-gradient" />
-          <div className="dot-grid absolute inset-0 opacity-30" />
-          <div className="relative max-w-4xl mx-auto z-10">
-            <Link
-              href="/gemstones"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-purple-300 mb-8 transition-colors duration-200"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-              Back to Gemstones
-            </Link>
-
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-              <div
-                className="w-20 h-20 rounded-2xl shrink-0 flex items-center justify-center shadow-lg"
-                style={{
-                  background: `radial-gradient(circle at 35% 35%, ${gem.color}cc, ${gem.color}44)`,
-                  boxShadow: `0 0 35px ${gem.color}45, inset 0 2px 0 rgba(255,255,255,0.2)`,
-                }}
-              >
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.9" />
-                  <path d="M3 9h18" stroke="white" strokeWidth="0.5" opacity="0.4" />
-                </svg>
-              </div>
-              <div>
-                <span className="text-[10px] font-medium uppercase tracking-widest px-2.5 py-1 rounded bg-[#a855f7]/10 text-purple-300 border border-[#a855f7]/20 mb-3 inline-block">
-                  {gem.planet}
-                </span>
-                <h1 className="display-xl text-[#f8f8ff] m-0 font-light flex items-baseline flex-wrap gap-x-4">
-                  {gem.name}
-                  <span className="text-xl md:text-2xl text-slate-400 font-light italic">
-                    ({gem.sanskrit})
-                  </span>
-                </h1>
-                <p className="text-base text-slate-400 mt-2 font-light italic">
-                  "{gem.tagline}"
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div className="max-w-4xl mx-auto px-6">
-          <Separator className="bg-purple-500/10" />
-        </div>
-
-        {/* Content */}
-        <section className="px-6 py-16 pb-24">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main content */}
-              <div className="lg:col-span-2 flex flex-col gap-6">
-                {/* Description */}
-                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
-                  <CardContent className="p-8">
-                    <h2 className="text-lg font-light text-[#f8f8ff] mb-4 tracking-tight">
-                      About {gem.name}
-                    </h2>
-                    <p className="text-sm md:text-base text-slate-400 font-light leading-relaxed">
-                      {gem.description}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                {/* How to Wear */}
-                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
-                  <CardContent className="p-8">
-                    <h2 className="text-lg font-light text-[#f8f8ff] mb-4 tracking-tight">
-                      How to Wear
-                    </h2>
-                    <p className="text-sm md:text-base text-slate-400 font-light leading-relaxed">
-                      {gem.howToWear}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                {/* Caution */}
-                <Card className="border-amber-500/20 bg-amber-500/5 backdrop-blur-sm">
-                  <CardContent className="p-8">
-                    <h2 className="text-base font-normal text-amber-400 mb-3 flex items-center gap-2">
-                      ⚠️ Caution
-                    </h2>
-                    <p className="text-xs md:text-sm text-slate-300 font-light leading-relaxed">
-                      {gem.caution}
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Sidebar */}
-              <div className="flex flex-col gap-6">
-                {/* Quick facts */}
-                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
-                  <CardContent className="p-6">
-                    <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-5">
-                      Quick Facts
-                    </h3>
-                    <div className="flex flex-col gap-4">
-                      {[
-                        { label: "Ruling Planet", value: gem.planet },
-                        { label: "Recommended Weight", value: gem.weight },
-                        { label: "Metal", value: gem.metal },
-                        { label: "Finger", value: gem.finger },
-                        { label: "Best Day", value: gem.day },
-                      ].map((item) => (
-                        <div key={item.label} className="border-b border-purple-500/10 pb-3 last:border-0 last:pb-0">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{item.label}</p>
-                          <p className="text-sm text-[#f8f8ff] font-light">{item.value}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Compatible signs */}
-                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
-                  <CardContent className="p-6">
-                    <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-4">
-                      Compatible Rashi
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {gem.rashi.map((r) => (
-                        <span
-                          key={r}
-                          className="text-xs px-3 py-1 rounded-full text-slate-300 border border-slate-700/50"
-                          style={{
-                            background: `${gem.color}08`,
-                            borderColor: `${gem.color}20`,
-                          }}
-                        >
-                          {r}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Properties */}
-                <Card className="glass-card border-purple-500/20 bg-purple-950/10 backdrop-blur-md">
-                  <CardContent className="p-6">
-                    <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-4">
-                      Key Properties
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {gem.properties.map((p) => (
-                        <span
-                          key={p}
-                          className="text-xs px-2.5 py-0.5 rounded-full text-purple-300 bg-purple-500/10 border border-purple-500/20"
-                        >
-                          {p}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* CTA */}
-                <Card className="border-purple-500/30 bg-purple-500/5 backdrop-blur-md shadow-[0_0_15px_rgba(124,58,237,0.05)]">
-                  <CardContent className="p-6">
-                    <p className="text-xs md:text-sm text-slate-400 font-light leading-relaxed mb-4">
-                      Wondering if {gem.name} is right for your chart?
-                    </p>
-                    <Button
-                      render={<Link href="/#recommend" />}
-                      className="w-full justify-center bg-gradient-to-r from-[#7c3aed] to-[#a855f7] hover:from-[#6d28d9] hover:to-[#9333ea] text-white border-0 py-2.5 text-xs md:text-sm font-medium rounded-full shadow-[0_0_15px_rgba(124,58,237,0)] hover:shadow-[0_0_20px_rgba(124,58,237,0.3)] transition-all"
-                    >
-                      Get My Reading
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </section>
+      <main className="pt-24 px-6 pb-24">
+        <GemstoneDetailClient gem={gem} />
       </main>
       <Footer />
     </>

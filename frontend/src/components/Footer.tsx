@@ -11,11 +11,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-r from-[#a855f7] to-[#ec4899] flex items-center justify-center">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.9" />
-                </svg>
-              </div>
+              <img
+                src="/logo.svg"
+                alt="Gemly Logo"
+                className="w-7 h-7 rounded-lg shrink-0"
+              />
               <span className="text-lg font-light tracking-wide text-[#f8f8ff]">
                 Gemly
               </span>

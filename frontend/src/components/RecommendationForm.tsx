@@ -66,14 +66,118 @@ const CONCERNS = [
   { value: "spiritual", label: "Spiritual Growth", emoji: "🔮", desc: "Enlightenment, intuition, inner peace" },
 ];
 
-const GEMSTONE_COLORS: Record<string, string> = {
-  Ruby: "#e11d48", Emerald: "#059669", Sapphire: "#2563eb",
-  "Blue Sapphire": "#1d4ed8", "Yellow Sapphire": "#d97706",
-  Amethyst: "#a855f7", Pearl: "#94a3b8", Diamond: "#e2e8f0",
-  Coral: "#ea580c", "Red Coral": "#ea580c",
-  "Cat's Eye": "#ca8a04", Hessonite: "#92400e",
-  Topaz: "#b45309", Opal: "#06b6d4", Aquamarine: "#0891b2",
+const GEMSTONE_CONFIG: Record<string, { color: string; image: string }> = {
+  "Cat's Eye": {
+    color: "#ca8a04",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Cat_sEye_composed_1080x.png"
+  },
+  "Pearl": {
+    color: "#94a3b8",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Pearl_composed_1080x.png"
+  },
+  "White Pukhraj": {
+    color: "#e2e8f0",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_White_Pukhraj_composed_1080x.png"
+  },
+  "Ceylon Pukhraj": {
+    color: "#fbbf24",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Ceylon_Pukhraj_composed_1080x.png"
+  },
+  "Peetambari Neelam": {
+    color: "#8b5cf6",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Peetambari_Neelam_composed_1080x.png"
+  },
+  "Ceylon Neelam": {
+    color: "#1d4ed8",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Ceylon_Neelam_composed_1080x.png"
+  },
+  "Neelam": {
+    color: "#2563eb",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Neelam_composed_1080x.png"
+  },
+  "Emerald": {
+    color: "#059669",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Emerald_composed_1080x.png"
+  },
+  "Burmese Ruby": {
+    color: "#be123c",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Burmese_Ruby_composed_1080x.png"
+  },
+  "Ruby": {
+    color: "#e11d48",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Ruby_composed_1080x.png"
+  },
+  "Australian Fire Opal": {
+    color: "#38bdf8",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Australian_Fire_Opal_composed_1080x.png"
+  },
+  "Fire Opal": {
+    color: "#f97316",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Fire_Opal_composed_1080x.png"
+  },
+  "Blue Topaz": {
+    color: "#60a5fa",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Blue_Topaz_composed_1080x.png"
+  },
+  "White Topaz": {
+    color: "#f1f5f9",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_White_Topaz_composed_1080x.png"
+  },
+  "Natural Zircon": {
+    color: "#e2e8f0",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Natural_Zircon_composed_1080x.png"
+  },
+  "Zirconia": {
+    color: "#f8fafc",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Zirconia_composed_1080x.png"
+  },
+  "Garnet": {
+    color: "#991b1b",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Garnet_composed_1080x.png"
+  },
+  "Lapis Lazuli": {
+    color: "#1e3a8a",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Lapis_Lazuli_composed_1080x.png"
+  },
+  "Turquoise": {
+    color: "#06b6d4",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Turquoise_composed_1080x.png"
+  },
+  "Moonstone": {
+    color: "#e2e8f0",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Moonstone_composed_1080x.png"
+  },
+  "Amethyst": {
+    color: "#7e22ce",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Amethyst_composed_1080x.png"
+  },
+  "Citrine": {
+    color: "#eab308",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Citrine_composed_1080x.png"
+  },
+  "Tiger Eye": {
+    color: "#a16207",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Tiger_Eye_composed_1080x.png"
+  },
+  "African Ruby": {
+    color: "#9f1239",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_African_Ruby_composed_1080x.png"
+  },
 };
+
+function getGemstoneConfig(name: string) {
+  if (GEMSTONE_CONFIG[name]) return GEMSTONE_CONFIG[name];
+  const lowerName = name.toLowerCase();
+  for (const [key, value] of Object.entries(GEMSTONE_CONFIG)) {
+    if (key.toLowerCase() === lowerName || lowerName.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerName)) {
+      return value;
+    }
+  }
+  return {
+    color: "#a855f7",
+    image: "https://humarapandit.com/cdn/shop/files/1img0_Natural_Zircon_composed_1080x.png"
+  };
+}
 
 const STEPS = [
   { id: 1, title: "About You", subtitle: "Let's start with your name and when you were born." },
@@ -85,7 +189,9 @@ const STEPS = [
 // --- Gemstone Card ------------------------------------------------
 function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
   const [expanded, setExpanded] = useState(false);
-  const color = GEMSTONE_COLORS[gem.name] ?? "#a855f7";
+  const config = getGemstoneConfig(gem.name);
+  const color = config.color;
+  const image = config.image;
 
   return (
     <motion.div
@@ -116,16 +222,17 @@ function GemstoneCard({ gem, index }: { gem: GemstoneResult; index: number }) {
       {/* Gem + name */}
       <div className="flex items-center gap-4 mb-4">
         <div
-          className="w-12 h-12 rounded-xl shrink-0 flex items-center justify-center shadow-md"
+          className="w-12 h-12 rounded-xl shrink-0 flex items-center justify-center shadow-md overflow-hidden"
           style={{
             background: `radial-gradient(circle at 35% 35%, ${color}cc, ${color}44)`,
             boxShadow: `0 0 15px ${color}35`,
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.85" />
-            <path d="M3 9h18" stroke="white" strokeWidth="0.5" opacity="0.4" />
-          </svg>
+          <img
+            src={image}
+            alt={gem.name}
+            className="w-10 h-10 object-contain p-0.5 transition-transform duration-300 group-hover:scale-110"
+          />
         </div>
         <div>
           <h3 className="text-xl font-light text-[#f8f8ff] tracking-tight">{gem.name}</h3>

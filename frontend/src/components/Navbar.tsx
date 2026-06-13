@@ -25,27 +25,16 @@ const navLinks = [
 ];
 
 // --- Gem logo SVG ----------------------------------------------------------
-function GemLogo() {
+function GemLogo({ scrolled }: { scrolled?: boolean }) {
+  const size = scrolled ? 24 : 30;
   return (
-    <div
-      className="flex items-center justify-center shrink-0"
-      style={{
-        width: 30,
-        height: 30,
-        background: "linear-gradient(135deg, #a855f7, #ec4899)",
-        borderRadius: 8,
-      }}
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2L3 9l9 13 9-13-9-7z" fill="white" opacity="0.9" />
-        <path
-          d="M3 9h18M12 2l-9 7 9 13 9-13-9-7z"
-          stroke="white"
-          strokeWidth="0.5"
-          opacity="0.4"
-        />
-      </svg>
-    </div>
+    <img
+      src="/logo.svg"
+      alt="Gemly Logo"
+      width={size}
+      height={size}
+      className="transition-all duration-300 rounded-lg shrink-0"
+    />
   );
 }
 
@@ -53,15 +42,18 @@ function GemLogo() {
 function CtaButton({
   onClick,
   className = "",
+  scrolled,
 }: {
   onClick?: () => void;
   className?: string;
+  scrolled?: boolean;
 }) {
   return (
     <Button
       render={<Link href="/#recommend" onClick={onClick} />}
       className={[
-        "btn-celestial border-0 font-medium text-white px-5 py-2.5 rounded-full text-xs md:text-sm tracking-wide active:scale-[0.98]",
+        "btn-celestial border-0 font-medium text-white rounded-full tracking-wide active:scale-[0.98] transition-all duration-300",
+        scrolled ? "px-4 py-1.5 text-xs" : "px-5 py-2.5 text-xs md:text-sm",
         className,
       ].join(" ")}
       style={{ height: "auto" }}
@@ -76,16 +68,21 @@ function NavLink({
   href,
   label,
   isActive,
+  scrolled,
 }: {
   href: string;
   label: string;
   isActive: boolean;
+  scrolled?: boolean;
 }) {
   return (
     <Link
       href={href}
-      className="relative text-[13px] font-medium transition-colors duration-200 group uppercase tracking-wider"
-      style={{ color: isActive ? "#c084fc" : "rgba(248,248,255,0.6)" }}
+      className="relative font-medium transition-all duration-300 group uppercase tracking-wider"
+      style={{
+        color: isActive ? "#c084fc" : "rgba(248,248,255,0.6)",
+        fontSize: scrolled ? "12px" : "13px",
+      }}
     >
       <span className="group-hover:text-[#f8f8ff] transition-colors duration-200">
         {label}
@@ -178,9 +175,14 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-4 md:py-6 pointer-events-none">
+    <div
+      className={`fixed top-0 left-0 right-0 z-50 flex justify-center px-4 transition-all duration-300 pointer-events-none ${scrolled ? "py-2" : "py-4 md:py-6"}`}
+      style={{ viewTransitionName: "site-header" } as React.CSSProperties}
+    >
       <nav
-        className="w-full max-w-5xl rounded-full border pointer-events-auto transition-all duration-300"
+        className={`w-full rounded-full border pointer-events-auto transition-all duration-300 ${
+          scrolled ? "max-w-3xl" : "max-w-5xl"
+        }`}
         style={{
           background: scrolled
             ? "rgba(10,8,18,0.75)"
@@ -196,15 +198,19 @@ export default function Navbar() {
         }}
       >
         <div
-          className="flex items-center justify-between"
-          style={{ padding: "0 16px 0 24px", height: "54px" }}
+          className="flex items-center justify-between transition-all duration-300"
+          style={{
+            padding: scrolled ? "0 12px 0 18px" : "0 16px 0 24px",
+            height: scrolled ? "44px" : "54px",
+          }}
         >
           {/* -- Logo ---------------------------------------------------- */}
-          <Link href="/" className="flex items-center gap-2.5 no-underline group">
-            <GemLogo />
+          <Link href="/" className="flex items-center gap-2 no-underline group">
+            <GemLogo scrolled={scrolled} />
             <span
+              className="transition-all duration-300"
               style={{
-                fontSize: 18,
+                fontSize: scrolled ? 16 : 18,
                 fontWeight: 300,
                 letterSpacing: "0.2px",
                 color: "#f8f8ff",
@@ -215,20 +221,21 @@ export default function Navbar() {
           </Link>
 
           {/* -- Desktop nav links --------------------------------------- */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className={`hidden md:flex items-center transition-all duration-300 ${scrolled ? "gap-6" : "gap-8"}`}>
             {navLinks.map((link) => (
               <NavLink
                 key={link.href}
                 href={link.href}
                 label={link.label}
                 isActive={pathname === link.href}
+                scrolled={scrolled}
               />
             ))}
           </div>
 
           {/* -- Desktop CTA --------------------------------------------- */}
           <div className="hidden md:flex items-center">
-            <CtaButton />
+            <CtaButton scrolled={scrolled} />
           </div>
 
           {/* -- Mobile: Sheet trigger (hamburger) ----------------------- */}

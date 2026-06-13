@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-const inter = Inter({
+const geistSans = Geist({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -50,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
+    <html lang="en" className={`${geistSans.variable} dark h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-[#0a0a0f] text-[#f8f8ff]">
         <TooltipProvider>
           {children}

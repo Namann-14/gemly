@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Outfit:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -104,7 +104,7 @@
   /* ── Spacing extras ─────────────────────────────── */
   --spacing-section: 96px;
   --font-heading:              var(--font-serif);
-  --font-sans:                 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-sans:                 var(--font-sans), system-ui, -apple-system, sans-serif;
   --font-serif:                'Cormorant Garamond', Georgia, serif;
   
   --color-sidebar-ring:              var(--sidebar-ring);
@@ -167,7 +167,7 @@ body {
   background: radial-gradient(circle at 50% 0%, #0e0a1f 0%, #040308 60%, #010103 100%);
   background-attachment: fixed;
   color: #f8f8ff;
-  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   font-weight: 300;
   font-size: 15px;
   line-height: 1.62;
@@ -517,4 +517,68 @@ h1, h2, h3, h4, h5, h6, .font-serif-mystic {
   filter: blur(80px);
   animation: aura-pulse 10s ease-in-out infinite;
   pointer-events: none;
+}
+
+/* ── View Transitions: Slide & Overlay Page Transitions ── */
+
+/* Anchor the site header so it does not animate during page transitions */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Prevent default cross-blending on root so the slide is solid and crisp */
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
+/* Old page slides out slightly to the left and fades out slightly */
+::view-transition-old(root) {
+  animation: 450ms cubic-bezier(0.16, 1, 0.3, 1) both slide-out-left;
+  mix-blend-mode: normal;
+}
+
+/* New page slides in on top from the right with a premium soft shadow */
+::view-transition-new(root) {
+  animation: 450ms cubic-bezier(0.16, 1, 0.3, 1) both slide-in-right;
+  mix-blend-mode: normal;
+}
+
+@keyframes slide-out-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-15%);
+    opacity: 0.7;
+    filter: brightness(0.7);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    box-shadow: -20px 0 50px rgba(0, 0, 0, 0.6);
+  }
+  to {
+    transform: translateX(0);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+/* Respect reduced motion setting */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }
